@@ -1,0 +1,1952 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>考公全景方法论 · 诊断驱动式</title>
+<style>
+  :root{
+    --bg:#eaeff4;
+    --bg-2:#ffffff;
+    --bg-3:#f4f7fa;
+    --card:#ffffff;
+    --card-2:#f4f7fa;
+    --line:rgba(30,58,82,.12);
+    --text:#16263a;
+    --text-2:#46586d;
+    --text-3:#8194a8;
+    --gold:#0f9d76;
+    --gold-2:#0a7d5e;
+    --purple:#3d5a80;
+    --purple-2:#1e3a52;
+    --red:#c0392b;
+    --red-bg:#fdf2f0;
+    --red-line:#c0392b;
+    --yellow:#d39e00;
+    --yellow-bg:rgba(211,158,0,.10);
+    --green:#0f9d76;
+    --green-bg:#eafaf3;
+    --blue-line:#2563eb;
+    --blue-bg:#eef4ff;
+    --gray-line:#7a8a9c;
+    --gray-bg:#f0f3f6;
+    --radius:14px;
+    --shadow:0 1px 8px rgba(20,40,60,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:linear-gradient(180deg,#eef3f8 0%,var(--bg) 100%);
+    background-attachment:fixed;
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+    font-size:16px;
+    line-height:1.8;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* —— 顶部导航 —— */
+  .topnav{
+    position:sticky;top:0;z-index:100;
+    background:linear-gradient(135deg,#16263a 0%,#1e3a52 60%,#2c4a6b 100%);
+    backdrop-filter:blur(12px);
+    border-bottom:3px solid var(--gold);
+    padding:14px 24px;
+    display:flex;align-items:center;justify-content:space-between;
+    gap:16px;flex-wrap:wrap;
+  }
+  .topnav .brand{
+    font-weight:700;font-size:17px;color:#eaf1f8;
+    display:flex;align-items:center;gap:10px;
+  }
+  .topnav .brand .dot{
+    width:10px;height:10px;border-radius:50%;
+    background:var(--gold);
+    box-shadow:0 0 12px var(--gold);
+  }
+  .topnav .brand small{color:#aebfce;font-weight:400;font-size:12px;letter-spacing:.5px}
+  .topnav .nav-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .topnav button{
+    background:rgba(255,255,255,.08);
+    color:#cfe0ee;
+    border:1px solid rgba(255,255,255,.18);
+    padding:8px 14px;border-radius:8px;
+    font-size:13px;cursor:pointer;
+    transition:all .2s;
+    font-family:inherit;
+  }
+  .topnav button:hover{background:rgba(255,255,255,.16);color:#fff;border-color:var(--gold)}
+  .topnav button.active{background:var(--gold);color:#1e3a52;border-color:var(--gold);font-weight:600}
+
+  /* —— 通用 —— */
+  .screen{display:none;animation:fadeIn .35s ease}
+  .screen.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .container{max-width:920px;margin:0 auto;padding:32px 24px 80px}
+  .container.wide{max-width:1080px}
+
+  h1.title-xl{
+    font-size:clamp(28px,5vw,44px);
+    font-weight:800;
+    line-height:1.25;
+    color:var(--text);
+    letter-spacing:-.5px;
+  }
+  h2.section-title{
+    font-size:clamp(22px,3.5vw,30px);
+    font-weight:700;
+    margin:36px 0 16px;
+    color:var(--text);
+    padding-bottom:10px;
+    border-bottom:2px solid var(--gold);
+    display:inline-block;
+  }
+  h3.sub-title{
+    font-size:20px;font-weight:600;
+    color:var(--gold);
+    margin:28px 0 14px;
+    display:flex;align-items:center;gap:10px;
+  }
+  h3.sub-title::before{
+    content:"";width:4px;height:18px;background:var(--gold);border-radius:2px;
+  }
+  h4.minor-title{
+    font-size:17px;font-weight:600;color:var(--text);
+    margin:18px 0 10px;
+  }
+  p{margin:10px 0;color:var(--text)}
+  p.lead{color:var(--text-2);font-size:17px}
+  strong{color:var(--gold-2);font-weight:600}
+  em{color:var(--purple);font-style:normal;font-weight:500}
+  a{color:var(--purple)}
+  ul,ol{margin:12px 0;padding-left:22px}
+  li{margin:6px 0;color:var(--text)}
+  code{background:var(--bg-3);padding:2px 6px;border-radius:4px;font-size:14px;color:var(--gold-2)}
+  hr{border:none;border-top:1px solid var(--line);margin:28px 0}
+
+  /* —— 首屏 —— */
+  .hero{
+    text-align:center;
+    padding:48px 24px 32px;
+  }
+  .hero .badge{
+    display:inline-block;
+    padding:6px 14px;
+    border:1px solid var(--gold);
+    color:var(--gold-2);
+    border-radius:999px;
+    font-size:12px;letter-spacing:1px;
+    margin-bottom:24px;
+  }
+  .hero .subtitle{
+    color:var(--text-2);
+    font-size:18px;
+    max-width:680px;margin:18px auto 32px;
+    line-height:1.8;
+  }
+  .hero .quote{
+    max-width:680px;margin:0 auto 36px;
+    padding:22px 26px;
+    background:var(--card);
+    border-left:3px solid var(--gold);
+    border-radius:8px;
+    text-align:left;
+    color:var(--text-2);
+    font-style:italic;
+    box-shadow:var(--shadow);
+  }
+  .cta-btn{
+    display:inline-block;
+    padding:16px 40px;
+    background:linear-gradient(135deg,var(--gold) 0%,var(--gold-2) 100%);
+    color:#ffffff;
+    font-size:17px;font-weight:700;
+    border:none;border-radius:999px;
+    cursor:pointer;
+    transition:all .25s;
+    font-family:inherit;
+    letter-spacing:1px;
+    box-shadow:0 8px 24px rgba(15,157,118,.3);
+  }
+  .cta-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(15,157,118,.4)}
+  .hero-features{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:16px;margin-top:48px;
+    max-width:760px;margin-left:auto;margin-right:auto;
+  }
+  .hero-feat{
+    padding:18px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    text-align:left;
+    box-shadow:var(--shadow);
+  }
+  .hero-feat .ic{font-size:24px;margin-bottom:6px}
+  .hero-feat .t{font-weight:600;color:var(--gold-2);margin-bottom:4px;font-size:15px}
+  .hero-feat .d{font-size:13px;color:var(--text-3);line-height:1.6}
+
+  /* —— 问卷 —— */
+  .quiz-head{
+    text-align:center;margin-bottom:24px;
+  }
+  .quiz-progress{
+    display:flex;gap:6px;justify-content:center;margin-bottom:18px;flex-wrap:wrap;
+  }
+  .quiz-progress .seg{
+    width:42px;height:6px;border-radius:3px;background:var(--bg-3);
+    transition:background .25s;
+  }
+  .quiz-progress .seg.done{background:var(--purple)}
+  .quiz-progress .seg.current{background:var(--gold)}
+  .group-tag{
+    display:inline-block;padding:5px 12px;
+    background:var(--card-2);color:var(--gold-2);
+    border:1px solid var(--line);
+    border-radius:999px;font-size:12px;font-weight:600;
+    letter-spacing:.5px;margin-bottom:12px;
+  }
+  .group-title{font-size:22px;font-weight:700;margin-bottom:6px;color:var(--text)}
+  .group-hint{color:var(--text-3);font-size:13px;margin-bottom:24px}
+
+  .q-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:24px 22px;
+    margin-bottom:18px;
+    box-shadow:var(--shadow);
+  }
+  .q-num{
+    display:inline-block;
+    width:30px;height:30px;
+    background:var(--purple-2);
+    color:#fff;
+    border-radius:50%;
+    text-align:center;line-height:30px;
+    font-size:13px;font-weight:700;
+    margin-right:10px;
+    vertical-align:middle;
+  }
+  .q-text{font-size:17px;font-weight:600;color:var(--text);line-height:1.6;display:inline-block;width:calc(100% - 44px);vertical-align:middle}
+  .q-note{color:var(--text-3);font-size:13px;margin:8px 0 14px 44px;font-style:italic}
+  .opt-list{margin-left:44px;display:flex;flex-direction:column;gap:8px}
+  .opt{
+    display:flex;align-items:flex-start;gap:10px;
+    padding:11px 14px;
+    background:var(--bg-3);
+    border:1px solid var(--line);
+    border-radius:8px;
+    cursor:pointer;
+    transition:all .18s;
+    font-size:15px;line-height:1.7;
+  }
+  .opt:hover{border-color:var(--purple);background:rgba(61,90,128,.08)}
+  .opt .radio{
+    width:18px;height:18px;border-radius:50%;
+    border:2px solid var(--text-3);
+    flex-shrink:0;margin-top:4px;
+    position:relative;
+    transition:all .18s;
+  }
+  .opt.selected{
+    border-color:var(--gold);
+    background:rgba(15,157,118,.08);
+  }
+  .opt.selected .radio{
+    border-color:var(--gold);
+  }
+  .opt.selected .radio::after{
+    content:"";position:absolute;
+    inset:3px;border-radius:50%;
+    background:var(--gold);
+  }
+  .opt .label{flex:1;color:var(--text)}
+  .opt .tag{
+    font-size:11px;padding:2px 7px;border-radius:4px;
+    background:var(--bg-3);color:var(--text-3);font-weight:600;
+  }
+  .opt.selected .tag{background:var(--gold);color:#ffffff}
+
+  .quiz-nav{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-top:24px;gap:12px;flex-wrap:wrap;
+  }
+  .btn{
+    padding:11px 22px;
+    border-radius:8px;
+    font-size:14px;font-weight:600;
+    cursor:pointer;border:none;
+    font-family:inherit;
+    transition:all .2s;
+  }
+  .btn-ghost{background:transparent;color:var(--text-2);border:1px solid var(--line)}
+  .btn-ghost:hover{background:var(--card);color:var(--text);border-color:var(--purple)}
+  .btn-ghost:disabled{opacity:.35;cursor:not-allowed}
+  .btn-primary{background:var(--gold);color:#ffffff}
+  .btn-primary:hover{background:var(--gold-2)}
+  .btn-primary:disabled{opacity:.4;cursor:not-allowed;background:var(--bg-3);color:var(--text-3)}
+  .quiz-counter{color:var(--text-3);font-size:13px}
+
+  /* —— 结果页 —— */
+  .result-hero{
+    text-align:center;padding:24px 0 18px;
+  }
+  .result-hero .verdict{
+    font-size:24px;font-weight:700;color:var(--gold-2);margin-bottom:8px;
+  }
+  .result-hero .sub{color:var(--text-2);font-size:15px}
+
+  .score-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:14px;margin:24px 0;
+  }
+  .score-card{
+    padding:18px;border-radius:12px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-top:3px solid var(--text-3);
+    transition:all .25s;
+    box-shadow:var(--shadow);
+  }
+  .score-card.red{border-top-color:var(--red);background:linear-gradient(180deg,var(--red-bg),var(--card))}
+  .score-card.yellow{border-top-color:var(--yellow);background:linear-gradient(180deg,var(--yellow-bg),var(--card))}
+  .score-card.green{border-top-color:var(--green);background:linear-gradient(180deg,var(--green-bg),var(--card))}
+  .score-card .dim-name{font-size:13px;color:var(--text-3);margin-bottom:6px;font-weight:600;letter-spacing:.5px}
+  .score-card .dim-score{font-size:28px;font-weight:800;color:var(--text)}
+  .score-card .dim-score small{font-size:14px;color:var(--text-3);font-weight:400}
+  .score-card .dim-status{
+    display:inline-block;margin-top:8px;
+    font-size:12px;padding:3px 10px;border-radius:999px;font-weight:600;
+  }
+  .score-card.red .dim-status{background:var(--red);color:#fff}
+  .score-card.yellow .dim-status{background:var(--yellow);color:#fff}
+  .score-card.green .dim-status{background:var(--green);color:#fff}
+
+  .radar-wrap{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:24px;margin:24px 0;
+    display:flex;flex-direction:column;align-items:center;
+    box-shadow:var(--shadow);
+  }
+  .radar-wrap canvas{max-width:100%;height:auto}
+  .radar-wrap .radar-title{
+    color:var(--gold-2);font-weight:600;font-size:15px;margin-bottom:8px;
+  }
+  .radar-wrap .radar-legend{
+    display:flex;gap:14px;flex-wrap:wrap;justify-content:center;
+    margin-top:14px;font-size:12px;color:var(--text-3);
+  }
+  .radar-wrap .radar-legend span{display:inline-flex;align-items:center;gap:5px}
+  .radar-wrap .radar-legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+
+  .priority-bar{
+    background:var(--card);
+    border-left:3px solid var(--gold);
+    padding:14px 18px;border-radius:8px;
+    margin:20px 0;font-size:14px;color:var(--text-2);
+    box-shadow:var(--shadow);
+  }
+  .priority-bar b{color:var(--gold-2)}
+
+  .route-recommend{
+    background:linear-gradient(135deg,var(--card) 0%,var(--card-2) 100%);
+    border:1px solid var(--gold);
+    border-radius:var(--radius);
+    padding:22px 24px;margin:22px 0;
+    box-shadow:0 8px 24px rgba(15,157,118,.12);
+  }
+  .route-recommend .label{
+    color:var(--gold-2);font-size:12px;letter-spacing:1.5px;
+    font-weight:700;margin-bottom:8px;text-transform:uppercase;
+  }
+  .route-recommend .name{font-size:22px;font-weight:700;color:var(--text);margin-bottom:6px}
+  .route-recommend .reason{color:var(--text-2);font-size:14px;margin-bottom:14px;line-height:1.7}
+  .route-recommend .order{font-size:13px;color:var(--text-2);line-height:1.9}
+  .route-recommend .order b{color:var(--gold-2)}
+
+  .all-routes-hint{
+    text-align:center;color:var(--text-3);font-size:13px;margin:18px 0;
+  }
+
+  .result-actions{
+    display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px;
+  }
+
+  /* —— 正文区组件 —— */
+  .content-toc{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px 24px;margin:24px 0;
+    box-shadow:var(--shadow);
+  }
+  .content-toc h4{color:var(--gold-2);margin-bottom:14px;font-size:16px}
+  .content-toc ol{padding-left:20px}
+  .content-toc li{font-size:14px;color:var(--text-2);margin:5px 0;cursor:pointer}
+  .content-toc li:hover{color:var(--gold-2)}
+
+  .prose-block{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:28px 28px;
+    margin:22px 0;
+    box-shadow:var(--shadow);
+  }
+  .prose-block h2.section-title{margin-top:0}
+  .prose-block p, .prose-block li{color:var(--text)}
+  .prose-block p.lead{color:var(--text-2)}
+
+  /* —— 表格 —— */
+  .table-wrap{
+    overflow-x:auto;
+    margin:16px 0;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:#ffffff;
+  }
+  table.diagnostic-table{
+    width:100%;border-collapse:collapse;
+    font-size:14px;min-width:520px;
+  }
+  table.diagnostic-table th,table.diagnostic-table td{
+    padding:11px 14px;
+    text-align:left;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+    line-height:1.7;
+  }
+  table.diagnostic-table th{
+    background:var(--bg-3);
+    color:var(--gold-2);
+    font-weight:600;
+    font-size:13px;
+    letter-spacing:.3px;
+    position:sticky;top:0;
+  }
+  table.diagnostic-table tr:last-child td{border-bottom:none}
+  table.diagnostic-table tr:hover td{background:rgba(61,90,128,.05)}
+  table.diagnostic-table td:first-child{color:var(--purple);font-weight:600;white-space:nowrap}
+
+  /* —— 避坑红线框 —— */
+  .red-line{
+    margin:18px 0;
+    padding:14px 18px 14px 16px;
+    background:var(--red-bg);
+    border-left:4px solid var(--red-line);
+    border-radius:0 8px 8px 0;
+  }
+  .red-line .label{
+    color:var(--red);font-weight:700;font-size:13px;
+    letter-spacing:.5px;margin-bottom:6px;
+    display:flex;align-items:center;gap:6px;
+  }
+  .red-line .label::before{content:"■ 避坑红线";font-size:12px}
+  .red-line .body{color:var(--text);font-size:15px;line-height:1.8}
+
+  /* —— 破局锦囊框 —— */
+  .blue-tip{
+    margin:18px 0;
+    padding:14px 18px 14px 16px;
+    background:var(--blue-bg);
+    border-left:4px solid var(--blue-line);
+    border-radius:0 8px 8px 0;
+  }
+  .blue-tip .label{
+    color:var(--blue-line);font-weight:700;font-size:13px;
+    letter-spacing:.5px;margin-bottom:6px;
+  }
+  .blue-tip .label::before{content:"◆ 破局锦囊"}
+  .blue-tip .body{color:var(--text);font-size:15px;line-height:1.8}
+
+  /* —— 自检框 —— */
+  .gray-check{
+    margin:18px 0;
+    padding:14px 18px 14px 16px;
+    background:var(--gray-bg);
+    border-left:4px solid var(--gray-line);
+    border-radius:0 8px 8px 0;
+  }
+  .gray-check .label{
+    color:var(--gray-line);font-weight:700;font-size:13px;
+    letter-spacing:.5px;margin-bottom:6px;
+  }
+  .gray-check .label::before{content:"◐ 自检"}
+  .gray-check .body{color:var(--text);font-size:15px;line-height:1.8}
+
+  /* —— 案例故事框 —— */
+  .story-box{
+    margin:18px 0;
+    padding:16px 20px;
+    background:linear-gradient(135deg,rgba(61,90,128,.10),rgba(61,90,128,.04));
+    border:1px solid rgba(61,90,128,.25);
+    border-radius:10px;
+  }
+  .story-box .label{
+    color:var(--purple);font-weight:700;font-size:13px;
+    letter-spacing:.5px;margin-bottom:8px;
+    display:flex;align-items:center;gap:6px;
+  }
+  .story-box .label::before{content:"📖 案例故事";font-size:13px}
+  .story-box .body{color:var(--text-2);font-size:15px;line-height:1.85;font-style:italic}
+
+  /* —— 行动清单（checkbox） —— */
+  .action-list{
+    margin:18px 0;
+    padding:18px 20px;
+    background:var(--card-2);
+    border:1px solid var(--gold);
+    border-radius:10px;
+  }
+  .action-list .label{
+    color:var(--gold-2);font-weight:700;font-size:14px;
+    margin-bottom:12px;letter-spacing:.5px;
+  }
+  .action-list ul{list-style:none;padding-left:0}
+  .action-list li{
+    position:relative;
+    padding:7px 0 7px 30px;
+    font-size:15px;color:var(--text);
+    line-height:1.7;
+    cursor:pointer;
+    user-select:none;
+  }
+  .action-list li::before{
+    content:"";
+    position:absolute;left:0;top:11px;
+    width:16px;height:16px;
+    border:2px solid var(--gold);
+    border-radius:4px;
+    background:transparent;
+    transition:all .15s;
+  }
+  .action-list li.checked::before{
+    background:var(--gold);
+  }
+  .action-list li.checked::after{
+    content:"✓";
+    position:absolute;left:3px;top:9px;
+    color:#ffffff;font-size:13px;font-weight:700;
+  }
+  .action-list li.checked{color:var(--text-3);text-decoration:line-through}
+  .action-list .sub-label{
+    color:var(--gold-2);font-weight:700;font-size:13px;
+    margin-top:14px;margin-bottom:6px;
+    padding-top:10px;border-top:1px dashed rgba(15,157,118,.25);
+  }
+  .action-list .sub-label:first-child{margin-top:0;padding-top:0;border-top:none}
+
+  /* —— 路线卡片（正文区） —— */
+  .route-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-left:3px solid var(--purple);
+    border-radius:0 12px 12px 0;
+    padding:20px 22px;
+    margin:18px 0;
+    box-shadow:var(--shadow);
+  }
+  .route-card .badge{
+    display:inline-block;
+    background:var(--purple-2);
+    color:#fff;
+    padding:3px 10px;
+    border-radius:999px;
+    font-size:12px;font-weight:700;
+    margin-bottom:8px;
+  }
+  .route-card .name{font-size:18px;font-weight:700;color:var(--gold-2);margin-bottom:8px}
+  .route-card .row{margin:8px 0;font-size:14px;line-height:1.75}
+  .route-card .row .k{color:var(--purple);font-weight:600;margin-right:6px}
+
+  /* —— 章节锚点 —— */
+  .chapter-anchor{
+    scroll-margin-top:80px;
+  }
+
+  /* —— 元问题框 —— */
+  .meta-question{
+    margin:24px 0;
+    padding:24px;
+    background:linear-gradient(135deg,var(--card-2),var(--card));
+    border:1px solid var(--gold);
+    border-radius:12px;
+    text-align:center;
+    box-shadow:var(--shadow);
+  }
+  .meta-question .label{
+    color:var(--gold-2);font-size:12px;letter-spacing:1.5px;
+    font-weight:700;margin-bottom:10px;
+  }
+  .meta-question .q{
+    font-size:20px;font-weight:700;color:var(--text);
+    line-height:1.6;margin-bottom:14px;
+  }
+  .meta-question .ans{font-size:14px;color:var(--text-2)}
+  .meta-question .ans .yes{color:var(--green)}
+  .meta-question .ans .no{color:var(--red)}
+
+  /* —— 通用引导段 —— */
+  .intro-callout{
+    padding:14px 18px;
+    background:var(--card);
+    border-left:3px solid var(--purple);
+    border-radius:0 8px 8px 0;
+    margin:16px 0;
+    color:var(--text-2);
+    font-size:15px;
+    box-shadow:var(--shadow);
+  }
+  .intro-callout b{color:var(--gold-2)}
+
+  /* —— 章节行动清单 wrap —— */
+  .chapter-action-wrap{
+    background:rgba(15,157,118,.04);
+    border:1px dashed rgba(15,157,118,.3);
+    border-radius:12px;
+    padding:6px 4px;
+    margin:24px 0;
+  }
+
+  /* —— 移动端 —— */
+  @media (max-width:640px){
+    .container{padding:20px 14px 60px}
+    .prose-block{padding:20px 16px}
+    .q-card{padding:18px 14px}
+    .q-text{font-size:15px;width:100%}
+    .opt-list{margin-left:0}
+    .q-note{margin-left:0}
+    .q-num{margin-right:0;margin-bottom:8px;display:block}
+    table.diagnostic-table{font-size:13px}
+    table.diagnostic-table th,table.diagnostic-table td{padding:8px 10px}
+    .topnav{padding:10px 14px}
+    .topnav .brand small{display:none}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="brand">
+    <span class="dot"></span>
+    考公全景方法论
+    <small>· 诊断驱动式</small>
+  </div>
+  <div class="nav-actions">
+    <button id="nav-intro" class="active" onclick="go('intro')">诊断入口</button>
+    <button id="nav-result" onclick="go('result')">查看结果</button>
+    <button id="nav-content" onclick="go('content')">完整正文</button>
+    <button id="nav-redo" onclick="resetQuiz()">重新诊断</button>
+  </div>
+</nav>
+
+<!-- ============ 首屏 ============ -->
+<section id="intro-screen" class="screen active">
+  <div class="hero">
+    <span class="badge">DIAGNOSTIC-DRIVEN · 诊断驱动式</span>
+    <h1 class="title-xl">先别急着学，<br>先看清你在哪</h1>
+    <p class="subtitle">这不是一本从头读到尾的小说，是一台诊断机器。<br>5 分钟做完 15 道题 → 雷达图定位卡点 → 个性化路线推荐 → 进入正文</p>
+
+    <div class="quote">
+      从假性努力到稳定提分——一套覆盖全人群、全阶段、全模块的考公备考系统。上百篇上岸经验中提炼共性，专治「学了很多分数不动」。
+    </div>
+
+    <button class="cta-btn" onclick="go('quiz')">▶ 开始诊断</button>
+
+    <div class="hero-features">
+      <div class="hero-feat">
+        <div class="ic">🧭</div>
+        <div class="t">15 题四维诊断</div>
+        <div class="d">认知扫盲 / 时间战场 / 方法瓶颈 / 心态方向，定位你的真正卡点</div>
+      </div>
+      <div class="hero-feat">
+        <div class="ic">📡</div>
+        <div class="t">雷达图可视化</div>
+        <div class="d">四维分数一图呈现，红黄绿灯一眼看清主战场</div>
+      </div>
+      <div class="hero-feat">
+        <div class="ic">🅰️</div>
+        <div class="t">5 条专属路线</div>
+        <div class="d">根据亮灯组合推荐阅读顺序，不浪费时间在不需要的章节</div>
+      </div>
+      <div class="hero-feat">
+        <div class="ic">📖</div>
+        <div class="t">正文零删减</div>
+        <div class="d">§0 导言 + §1 假性努力 全文呈现，含表格/案例/红线/锦囊/自检</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 问卷 ============ -->
+<section id="quiz-screen" class="screen">
+  <div class="container">
+    <div class="quiz-head">
+      <div class="quiz-progress" id="quiz-progress"></div>
+      <div class="group-tag" id="group-tag">第一组</div>
+      <h2 class="group-title" id="group-title"></h2>
+      <div class="group-hint" id="group-hint"></div>
+    </div>
+    <div id="questions-area"></div>
+    <div class="quiz-nav">
+      <button class="btn btn-ghost" id="prev-btn" onclick="prevGroup()">← 上一组</button>
+      <span class="quiz-counter" id="quiz-counter"></span>
+      <button class="btn btn-primary" id="next-btn" onclick="nextGroup()">下一组 →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 结果页 ============ -->
+<section id="result-screen" class="screen">
+  <div class="container">
+    <div class="result-hero">
+      <div class="verdict" id="verdict-title">你的备考地图已生成</div>
+      <div class="sub" id="verdict-sub">下面是你的四维分数、雷达图与推荐路线</div>
+    </div>
+
+    <div class="score-grid" id="score-grid"></div>
+
+    <div class="radar-wrap">
+      <div class="radar-title">四维诊断雷达图</div>
+      <canvas id="radar-canvas" width="380" height="380"></canvas>
+      <div class="radar-legend">
+        <span><i style="background:var(--red)"></i>重度红灯 主战场</span>
+        <span><i style="background:var(--yellow)"></i>中度黄灯 次优先</span>
+        <span><i style="background:var(--green)"></i>绿灯 可跳过</span>
+      </div>
+    </div>
+
+    <div class="priority-bar" id="priority-bar"></div>
+
+    <div id="route-recommend-area"></div>
+
+    <div class="all-routes-hint">↓ 下方为全部 5 条路线，可对照你的诊断结果参考</div>
+    <div id="all-routes-area"></div>
+
+    <div class="result-actions">
+      <button class="btn btn-ghost" onclick="go('quiz')">← 修改答案</button>
+      <button class="btn btn-primary" onclick="go('content')">进入完整正文 →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 正文区 ============ -->
+<section id="content-screen" class="screen">
+  <div class="container wide">
+
+    <!-- 目录 -->
+    <div class="content-toc">
+      <h4>📑 全书目录（11 章 · 30+ 节 · 7 个可打印工具 · 一张地图覆盖备考全周期）</h4>
+      <ol>
+        <li><b>§0 导言</b>：先别急着学，先看清你在哪（自测诊断 / 全书导航 / 使用指南）</li>
+        <li><b>§1 假性努力</b>：你最大的敌人不是竞争，是假性努力（十种形态 / 纠正动作 / 三种深度纠偏）</li>
+        <li>§2 模块取舍：把时间花在回报最高的地方</li>
+        <li>§3 方法路由：什么时候用什么方法的地图</li>
+        <li>§4 时间规划：列"崩了也能继续"的计划</li>
+        <li>§5 行测：从"做不完"到"稳拿分"</li>
+        <li>§6 申论：把"玄学"变回手艺</li>
+        <li>§7 面试：从"背稿机器"到"活人交流"</li>
+        <li>§8 心态：扛住不崩的系统方法</li>
+        <li>§9 避坑地图：前面 8 章没讲的暗坑——从这里捞回来</li>
+        <li>附录：工具箱（打出来，贴墙上，每天扫一眼）</li>
+      </ol>
+      <p style="margin-top:14px;font-size:13px;color:var(--text-3);font-style:italic">
+        📖 <b>阅读建议</b>：先花 5 分钟做 §0.1 的 15 道自测题，按计分结果直接跳到对应章节。不必从头读到尾——这是工具书，不是小说。
+      </p>
+    </div>
+
+    <!-- ============ §0 导言 ============ -->
+    <div class="prose-block chapter-anchor" id="sec-0">
+      <h2 class="section-title">§0 导言：先别急着学，先看清你在哪</h2>
+      <p class="intro-callout">本章解决：<b>你到底卡在哪 / 这本书从哪读起</b></p>
+
+      <h3 class="sub-title">§0.1 自测诊断：15 道题，定位你真正的卡点</h3>
+
+      <p>打开这本书，你可能刚下定决心要考公，也可能已经刷了上百套题但分数就是不动。</p>
+      <p>不管是哪种——<strong>在你翻开任何一章正文之前，先把这 15 道题做完。</strong></p>
+      <p>这不是网上那种"测测你适合什么岗位"的娱乐小测。每题四个选项，都对应着几百个真实备考者踩过的同一个坑。做完你就能看到一张属于自己的备考地图：你的处境、你的阶段、你最该先啃哪块骨头。</p>
+      <p>拿出手机或一张纸，记下你的答案。5 分钟足够了。</p>
+
+      <p class="lead"><em>↑ 上方"诊断入口"即可进入交互式诊断流程，答完 15 题自动生成你的雷达图与推荐路线。下方为题目与计分规则原文。</em></p>
+
+      <h4 class="minor-title">第一组：你是谁，你从哪来（3 题） → 🧭 认知扫盲维度</h4>
+      <p><b>Q1. 你目前的状态是？</b></p>
+      <ul>
+        <li>A. 在校大三大四，时间有，但完全不知道从哪下手</li>
+        <li>B. 一边上班一边备考，每天能挤出的有效时间不到 3 小时</li>
+        <li>C. 已经考过至少一次，这次是二战或三战</li>
+        <li>D. 刚毕业或待业中，可以全职备考但有经济压力</li>
+      </ul>
+      <p><b>Q2. 你知道行测五个模块，投入同样的100小时——哪个提分最多、哪个基本打了水漂吗？</b></p>
+      <ul>
+        <li>A. 完全没概念。我每个模块平均分配时间，觉得都差不多重要</li>
+        <li>B. 大概知道资料分析重要、常识不太值，但具体每个模块的投入产出数据说不清楚</li>
+        <li>C. 清楚知道性价比排名，并且已经在按优先级分配每天的时间</li>
+      </ul>
+      <p><b>Q3. 你手里现在有多少备考资料/课程？</b></p>
+      <ul>
+        <li>A. 还没开始买，不知道买什么、看哪个老师</li>
+        <li>B. 网盘里存了几十 G，关注了七八个老师的课，但大部分没打开过</li>
+        <li>C. 只留了核心几样——真题、一本系统讲义、一门课，够用</li>
+      </ul>
+
+      <h4 class="minor-title">第二组：你在哪个阶段，你跑得动吗（3 题） → ⏱️ 时间战场维度</h4>
+      <p><b>Q4. 离你计划参加的最近一次考试，还有多久？</b></p>
+      <ul>
+        <li>A. 不到 2 个月——冲刺了</li>
+        <li>B. 2-6 个月——拔高期</li>
+        <li>C. 6 个月以上——长线作战</li>
+      </ul>
+      <p><b>Q5. 你每天能保证的"有效学习时间"大概多少？</b></p>
+      <p style="color:var(--text-3);font-size:13px;font-style:italic;margin-left:16px">有效学习 = 脑子真的在动，不是坐在书桌前熬钟头。</p>
+      <ul>
+        <li>A. 3 小时以内，下班后就剩一口气</li>
+        <li>B. 3-6 小时，还算正常</li>
+        <li>C. 6 小时以上，可以全天投入</li>
+      </ul>
+      <p><b>Q6. 你做套卷时会严格计时吗（包括涂答题卡）？</b></p>
+      <ul>
+        <li>A. 从来没计过时，不限量不限速慢慢做</li>
+        <li>B. 偶尔计时，但不严格，也没练过涂卡</li>
+        <li>C. 每套都按考试时间严格掐表，涂卡也当考试练</li>
+      </ul>
+
+      <h4 class="minor-title">第三组：行测——你的问题出在哪（3 题） → ⚔️ 方法瓶颈维度</h4>
+      <p><b>Q7. 做完一套行测，你花在复盘上的时间，大概是做题时间的多少？</b></p>
+      <ul>
+        <li>A. 做完对个答案、扫眼解析就翻篇了——10% 都不到</li>
+        <li>B. 错题会认真看解析，但很少合上答案自己重做一遍</li>
+        <li>C. 每道错题都追问原因，同类错题放一起比对，复盘时间至少是做题的一半</li>
+      </ul>
+      <p><b>Q8. 你做行测时有固定的做题顺序和每个模块的时间上限吗？</b></p>
+      <ul>
+        <li>A. 没有，从第一题顺着往下做，做到哪算哪</li>
+        <li>B. 有大致顺序，但没严格掐表，经常在某个模块超时</li>
+        <li>C. 有固定顺序，每个模块掐死时间，到点就跳</li>
+      </ul>
+      <p><b>Q9. 资料分析这个模块——行测性价比之王——你的状态是？</b></p>
+      <ul>
+        <li>A. 错得不多但做得太慢，一套资料分析能耗掉将近 40 分钟</li>
+        <li>B. 公式都懂，但经常看错数、抄错数，每次都归结为"粗心"</li>
+        <li>C. 速度和正确率都在线，是稳定拿分的底盘</li>
+      </ul>
+
+      <h4 class="minor-title">第四组：申论——你还在背模板吗（2 题） → 🧠 心态/方向维度</h4>
+      <p><b>Q10. 关于申论大作文，以下哪句最像你？</b></p>
+      <ul>
+        <li>A. 一篇完整的都还没写过，总想等"积累够了再动笔"</li>
+        <li>B. 写了，但每篇都像在套模板，分数稳定在中低档</li>
+        <li>C. 能稳定输出，但在立意深度和论证厚度上还有瓶颈</li>
+      </ul>
+      <p><b>Q11. 写申论小题时，你怎么处理材料里的原词？</b></p>
+      <ul>
+        <li>A. 尽量用自己的话转述，觉得直接抄材料会显得没水平</li>
+        <li>B. 会抄一些材料原词，但不放心，又加了自己背的规范词混着用</li>
+        <li>C. 主要用材料原词，只在需要概括提炼时才用自己的话</li>
+      </ul>
+
+      <h4 class="minor-title">第五组：心态和习惯——最容易被忽略的暗坑（4 题） → 🧠 心态/方向维度（续）</h4>
+      <p><b>Q12. 你备考时最容易出现哪种情况？</b></p>
+      <ul>
+        <li>A. 计划列得完美，执行三天就崩，然后推翻重来——循环往复</li>
+        <li>B. 听课听得停不下来，笔记记得满满当当，但打开题本就不会做</li>
+        <li>C. 模考分数一掉就慌，开始怀疑"我是不是考不上了"</li>
+        <li>D. 学不进去就刷手机，一条短视频接一条，回过神来半小时没了</li>
+      </ul>
+      <p><b>Q13. 你把题做错时，通常怎么写错因？</b></p>
+      <ul>
+        <li>A. "粗心了""状态不好""运气差""这题太偏了"</li>
+        <li>B. 能说出是哪个知识点不会，但分析到这就停了</li>
+        <li>C. 能追溯到做题时的具体操作失误——比如"没在材料里打草稿，凭脑子记结果抄错行"</li>
+      </ul>
+      <p><b>Q14. 行测和申论的时间分配，你目前是什么样的？</b></p>
+      <ul>
+        <li>A. 大部分时间都给了行测，申论基本没怎么动</li>
+        <li>B. 两个都在学，但申论总有一种"学得很虚、不知道学到了啥"的感觉</li>
+        <li>C. 两边都有稳定的节奏，分数也大致能匹配</li>
+      </ul>
+      <p><b>Q15. 回顾最近一周的备考——抛开分数——你能具体说出"我到底学会了什么"吗？</b></p>
+      <ul>
+        <li>A. 说不上来。感觉每天都在学，但问学了啥——脑子里空的</li>
+        <li>B. 能大概说出学了哪个模块、听了什么课，但不够具体</li>
+        <li>C. 能说清楚：资料分析的增长贡献率题型从不会到会了；定义判断正确率从六成提到了八成</li>
+      </ul>
+
+      <h4 class="minor-title">🧭 计分规则</h4>
+      <p>每道题的选项不是"对错"，是信号强度：</p>
+      <ul>
+        <li><strong>A = 1 分</strong>（红灯 🚨：明显有问题，最优先解决）</li>
+        <li><strong>B = 2 分</strong>（黄灯 ⚠️：有隐患，第二梯队）</li>
+        <li><strong>C = 3 分</strong>（绿灯 ✅：这块你目前 OK）</li>
+        <li><strong>Q12 选了 D = 1 分</strong>（注意力问题，等同于红灯）</li>
+      </ul>
+      <p>每个维度内的题目分数相加，<strong>总分越低 = 问题越大</strong>。</p>
+
+      <h4 class="minor-title">四维计分表</h4>
+      <p>拿出你刚才记下的 15 个答案，逐题换算成分数，填进下表：</p>
+      <div class="table-wrap">
+        <table class="diagnostic-table">
+          <thead>
+            <tr><th>维度</th><th>题号</th><th>你的分数</th><th>总分</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>🧭 认知扫盲</td><td>Q1 + Q2 + Q3</td><td>__ + __ + __</td><td>__ / 9</td></tr>
+            <tr><td>⏱️ 时间战场</td><td>Q4 + Q5 + Q6</td><td>__ + __ + __</td><td>__ / 9</td></tr>
+            <tr><td>⚔️ 方法瓶颈</td><td>Q7 + Q8 + Q9</td><td>__ + __ + __</td><td>__ / 9</td></tr>
+            <tr><td>🧠 心态/方向</td><td>Q10 + Q11 + Q12 + Q13 + Q14 + Q15</td><td>__×6</td><td>__ / 18</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4 class="minor-title">分数怎么读</h4>
+      <div class="table-wrap">
+        <table class="diagnostic-table">
+          <thead>
+            <tr><th>你的总分</th><th>判定</th><th>意味着</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>3-4 分（心态维度 6-8 分）</td><td>🔥 重度红灯</td><td>这个维度是你的<strong>主战场</strong>。对应章节必读，最先读</td></tr>
+            <tr><td>5-6 分（心态维度 9-12 分）</td><td>⚡ 中度黄灯</td><td>次优先。主战场解决后再处理</td></tr>
+            <tr><td>7-9 分（心态维度 13-18 分）</td><td>✅ 绿灯</td><td>这个维度你目前 OK。对应章<strong>可跳过</strong>，想确认的话只读该章开头的「本章解决」和结尾的「行动清单」，5 分钟搞定</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4 class="minor-title">多个维度亮灯，先读哪个？</h4>
+      <p>按这个顺序：<strong>认知扫盲 &gt; 方法瓶颈 &gt; 时间战场 &gt; 心态</strong>。</p>
+      <p>道理很简单——先解决"不知道规则"，再解决"不会做"，最后解决"没时间"和"不想做"。不要一上来就跟心态较劲，大部分人的焦虑是方法错了导致的，方法对了焦虑自己就消了。</p>
+
+      <h4 class="minor-title">两种特殊情况</h4>
+      <p><strong>情况一：四个维度全是绿灯（全是 7+ 分）</strong></p>
+      <p>恭喜，你大概率已经在正确的轨道上了。这本书的重点读 <b>§3 方法路由</b>（优化打法）和 <b>§9 避坑地图</b>（考前扫雷），其余章速览行动清单即可。</p>
+      <p><strong>情况二：分数分散，没有明显爆红的维度</strong></p>
+      <p>挑你<strong>主观感受最痛苦</strong>的那个维度先下手。数据不能替你感觉——你每天学完后心里最堵的那件事，就是你该先啃的骨头。</p>
+      <p>下面 §0.3 的五条推荐路线，就是根据这些维度的不同亮灯组合设计的。找到总分最低、最像你的那条，直接上路。</p>
+
+      <div class="red-line">
+        <div class="label"></div>
+        <div class="body">每年都有大批考生闷头学了好几个月才发现——自己最薄弱的地方根本就不是"学得不够"，而是从一开始就没做对诊断。在错误的方向上加速跑，等于在给自己挖更深的坑。<strong>15 道题花 5 分钟，总比浪费三个月强。</strong></div>
+      </div>
+
+      <!-- §0.2 -->
+      <h3 class="sub-title" id="sec-0-2">§0.2 全书读前导航</h3>
+      <p>这本书一共九章加一个附录。它不是一本从头读到尾的小说——不同的人，入口不一样。下面这张表让你一眼判断：这一章解决什么、适合谁读、大概读多久。</p>
+      <div class="table-wrap">
+        <table class="diagnostic-table">
+          <thead>
+            <tr><th>章节</th><th>解决什么问题</th><th>谁该读（看你的计分表）</th><th>建议用时</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>导言</b>（你在读）</td><td>先看清自己卡在哪，别在错误方向跑</td><td>所有人——读任何章之前先做完 §0.1 的 15 道题</td><td>15 分钟</td></tr>
+            <tr><td><b>§1 假性努力</b></td><td>刷了很多题、学了很多课，分数就是不动</td><td>🧭 认知 ≤ 5 或 ⚔️ 方法 ≤ 5 或 🧠 Q15 = 1 分</td><td>60 分钟</td></tr>
+            <tr><td><b>§2 模块取舍</b></td><td>在职时间不够、不知道什么该放弃什么该死磕</td><td>⏱️ 时间维度 ≤ 5 分</td><td>40 分钟</td></tr>
+            <tr><td><b>§3 方法路由</b></td><td>看了很多方法但不知道哪个适合自己</td><td>⚔️ 方法维度 5-6 分 或 二战/拔高期考生</td><td>50 分钟</td></tr>
+            <tr><td><b>§4 时间规划</b></td><td>不知道怎么分配每天的时间，计划总是列了就崩</td><td>⏱️ 时间 ≤ 5 或 🧭 认知 ≤ 5</td><td>45 分钟</td></tr>
+            <tr><td><b>§5 行测</b></td><td>五个模块逐个击破，每一分从哪来到哪去</td><td>⚔️ 方法维度 ≤ 6 分</td><td>90 分钟</td></tr>
+            <tr><td><b>§6 申论</b></td><td>别再背模板了，把申论从"玄学"拉回正轨</td><td>🧠 Q10 = 1-2 分 或 Q11 = 1-2 分 或 Q14 = 1 分</td><td>60 分钟</td></tr>
+            <tr><td><b>§7 面试</b></td><td>笔试过了面试挂了——这个噩梦从这章终结</td><td>进面阶段或想提前准备的</td><td>40 分钟</td></tr>
+            <tr><td><b>§8 心态</b></td><td>崩溃、倦怠、自我怀疑——备考中最难的根本不是学</td><td>🧠 心态维度总分 ≤ 10 分</td><td>50 分钟</td></tr>
+            <tr><td><b>§9 避坑地图</b></td><td>从第一天到考场最后 1 分钟，所有高频暗坑</td><td>所有人。冲刺期优先读 §9.3-§9.4</td><td>40 分钟</td></tr>
+            <tr><td><b>附录</b></td><td>周计划空白模板、每日清单、避坑速查表、考场物品清单</td><td>所有人，打出来贴墙上</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="intro-callout">如果你的某个维度是绿灯（7+ 分），对应章不需要精读。翻到那章，读一下开头的「本章解决」和结尾的「行动清单」，5 分钟搞定，不用逐字啃。</div>
+      <div class="blue-tip">
+        <div class="label"></div>
+        <div class="body">别被章的数量吓到。你不需要全部读完——最可能的情况是，你只需要精读其中 4-5 章，剩下的在需要时当工具书翻。这不是小说，不需要从第一页看到最后一页。</div>
+      </div>
+
+      <!-- §0.3 -->
+      <h3 class="sub-title" id="sec-0-3">§0.3 使用指南：你的专属阅读路线</h3>
+      <p>根据 §0.1 的诊断结果，找到最像你的那条路线，跟着走。</p>
+
+      <div class="route-card">
+        <div class="badge">🅰️ 路线一</div>
+        <div class="name">"时间不够"型——在职党 + 冲刺期</div>
+        <div class="row"><span class="k">你的画像：</span>每天只有 2-3 小时，考试可能不到 3 个月。不是不努力，是时间这个变量没人帮你管。</div>
+        <div class="row"><span class="k">核心矛盾：</span>取舍。你不可能什么都学，但你必须把有限的精力砸在最对的地方。</div>
+        <div class="row"><span class="k">推荐阅读顺序：</span></div>
+        <ol>
+          <li><b>§2 模块取舍</b> ← 先读这章。知道什么该放弃，比你咬牙硬学更重要</li>
+          <li><b>§4 时间规划</b> ← 把你那东一块西一块的碎片时间，拼成一张能坚持的网</li>
+          <li><b>§5 行测</b> ← 重点读资料分析、判断推理、言语理解这三节，数量关系和常识按 §2 的取舍策略来</li>
+          <li><b>§9 避坑地图</b> ← 时间少的人反而更经不起踩坑</li>
+          <li>申论如果还没动 → <b>§6.1 思维差异</b>，先用 20 分钟把"行测脑"和"申论脑"分清楚</li>
+        </ol>
+      </div>
+
+      <div class="route-card">
+        <div class="badge">🅱️ 路线二</div>
+        <div class="name">"刷了很多题但分不动"型——假性努力 + 瓶颈期</div>
+        <div class="row"><span class="k">你的画像：</span>你可能已经刷了上百套题、听了几百节课，但分数稳得像被钉住了。问题不在"不够努力"，在"努力的方式该换了"。</div>
+        <div class="row"><span class="k">核心矛盾：</span>从追求数量切换到追求深度。从"我刷了多少"切换到"我吃透了几道"。</div>
+        <div class="row"><span class="k">推荐阅读顺序：</span></div>
+        <ol>
+          <li><b>§1 假性努力</b> ← 你先得认出自己卡在哪个形态里。这章可能是你整本书最值的一章</li>
+          <li><b>§5 行测</b> ← 找到你卡住的那个模块，精读对应小节。别整章通读，先啃最疼的那块</li>
+          <li><b>§3 方法路由</b> ← 你现在需要的不是更多的方法，是"对的组合"</li>
+          <li><b>§8 心态</b> ← 读 §8.2 拔高期 + §8.6 急救工具箱。瓶颈期的焦虑是标配，别让它吃掉你</li>
+        </ol>
+      </div>
+
+      <div class="route-card">
+        <div class="badge">🅲 路线三</div>
+        <div class="name">"完全小白"型——应届生 + 零基础</div>
+        <div class="row"><span class="k">你的画像：</span>刚决定考公，或者学了不到一个月。信息是碎片化的，不知道从哪开始，也不知道"正常进度"应该长什么样。</div>
+        <div class="row"><span class="k">核心矛盾：</span>扫盲。在错误认知下努力 = 白努力。你最大的资产是应届生身份，别把它浪费在走弯路上。</div>
+        <div class="row"><span class="k">推荐阅读顺序：</span></div>
+        <ol>
+          <li><b>§4 时间规划</b> ← 先把每天的框架搭好，别一上来就瞎学</li>
+          <li><b>§5 行测</b> ← 五大模块按本书顺序读即可，从资料分析开始</li>
+          <li><b>§6 申论</b> ← 同步启动，别走"行测搞完再搞申论"的歪路。最晚从备考第二个月开始动笔</li>
+          <li><b>§1 假性努力</b> ← 提前知道哪些是坑，比踩了再爬出来省三个月</li>
+        </ol>
+      </div>
+
+      <div class="route-card">
+        <div class="badge">🅳 路线四</div>
+        <div class="name">"二战三战"型——有基础但上次没上岸</div>
+        <div class="row"><span class="k">你的画像：</span>你经历过至少一轮完整的备考周期。这次你不想再走老路——但你得先找出上次的老路到底哪里走错了。</div>
+        <div class="row"><span class="k">核心矛盾：</span>复盘上次失败，换打法。同样的方法不可能带来不同的结果。</div>
+        <div class="row"><span class="k">推荐阅读顺序：</span></div>
+        <ol>
+          <li><b>§1 假性努力</b> ← 二战最大的隐蔽敌人：你可能在用"看起来很努力"的方式逃避真正薄弱的地方</li>
+          <li><b>§3 方法路由</b> ← 上次的方法没把你送进去，这次换一套</li>
+          <li><b>§8 心态</b> ← 重点读 §8.5 二战/三战专属 + §8.6 急救工具箱。这一次，心态不是副课，是主课</li>
+          <li><b>§5 行测</b> / <b>§6 申论</b> ← 不是从头学，是找到上次的薄弱模块精准打击。把去年的错题翻出来对照</li>
+        </ol>
+      </div>
+
+      <div class="route-card">
+        <div class="badge">🅴 路线五</div>
+        <div class="name">"偏科"型——行测申论一条腿走路</div>
+        <div class="row"><span class="k">你的画像：</span>某一科已经很稳了，另一科还在原地。行测 75 申论 55，或者反过来。总分被那条短腿活活拖死。</div>
+        <div class="row"><span class="k">核心矛盾：</span>矫正认知偏差。偏科往往不是能力问题，是你对弱的那科有认知上的抗拒——觉得申论是玄学、或者觉得行测靠天赋。</div>
+        <div class="row"><span class="k">推荐阅读顺序：</span></div>
+        <ol>
+          <li>偏行测 → <b>§6 申论全章</b>，从 §6.1 思维差异开始——你得先承认申论不是靠背，是靠读材料</li>
+          <li>偏申论 → <b>§5 行测全章</b>，从资料分析和判断推理开始——这两块提分最快</li>
+          <li>两个都想提 → <b>§2 模块取舍</b> + <b>§3 方法路由</b>，重新分配你的精力权重</li>
+          <li><b>§9 避坑地图</b> ← 偏科的人往往有一整套"偏科专用坑"，翻翻看你中了几个</li>
+        </ol>
+      </div>
+
+      <!-- §0 行动清单 -->
+      <div class="chapter-action-wrap">
+        <h3 class="sub-title" style="margin-top:18px">📋 本章行动清单</h3>
+        <div class="action-list">
+          <ul>
+            <li onclick="toggleCheck(this)">做完 §0.1 的 15 道自测题，把所有答案记下来</li>
+            <li onclick="toggleCheck(this)">对照诊断维度表，圈出你 A/B 最多的 1-2 个维度——那就是你的主战场</li>
+            <li onclick="toggleCheck(this)">在 §0.3 中找到最匹配你的那条路线（可能不止一条——先把最急的那条走完）</li>
+            <li onclick="toggleCheck(this)">翻开你路线推荐的第一章，开始读</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ §1 假性努力 ============ -->
+    <div class="prose-block chapter-anchor" id="sec-1">
+      <h2 class="section-title">§1 你最大的敌人不是竞争，是假性努力</h2>
+      <p class="intro-callout">本章解决：<b>刷了很多题分数不动 / 课听了很多题不会做 / 每天很累但不知道学了啥</b></p>
+
+      <p>晚上十一点，你合上今天的第二套行测卷子，对了答案——62 分。</p>
+      <p>和三个月前第一次模考一模一样。</p>
+      <p>你看着桌上那摞真题，87 套了。错题本记了满满一本，荧光笔买了五种颜色，网盘里存了几十个 G。你真的是拼了。但那个分数就像被钉在墙上，纹丝不动。</p>
+      <p>这时候脑子里会冒出两个声音。一个说："是不是我天赋不够？""是不是考公太难了？"另一个声音很小，但你得抓住它——<strong>"是不是我的努力方式本身出了问题？"</strong></p>
+      <p>第一个声音让你放弃。第二个声音让你调整。</p>
+      <p>大部分人听了第一个。这章是写给愿意听第二个的人。</p>
+      <p>假性努力不是不努力。恰恰相反，假性努力的人往往比谁都拼。问题是方向错了——你在用"看起来很努力"的方式，绕开了"真正需要下功夫"的地方。千军万马过独木桥，真正把你挤下去的，往往不是竞争对手，是你自己的假努力。</p>
+      <p>这一章，我们把假性努力掰开揉碎——它长什么样子、你是怎么陷进去的、以及每一种形态怎么破。最后只让你带走一件事。</p>
+
+      <h3 class="sub-title" id="sec-1-1">§1.1 假性努力的十种面孔：你对号入座了几个</h3>
+      <p>下面这十种形态，每种都有一批备考者在里面困了好几个月而不自知。一条条对照，圈出你中招的那几条。</p>
+
+      <h4 class="minor-title">形态一：只刷题，不复盘</h4>
+      <p><b>典型表现</b>：刷一套题 2 小时，对答案 10 分钟，扫一眼解析 5 分钟——然后翻篇，下一套。</p>
+      <p>你的眼里只看到"对了"还是"错了"，没有拆解"为什么错"。下次遇到同类题，该错还是错。一天刷 200 道，脑子里没留下任何关于"这道题我踩过什么坑"的记忆。</p>
+      <div class="story-box">
+        <div class="label"></div>
+        <div class="body">有个考生每天雷打不动上午一套真题下午一套真题，坚持了两个月，刷了上百套，错题本记了满满一本。可模考成绩依旧在 60 分左右打转，有时候甚至比刚开始学的时候还差。他崩溃了——"我明明比谁都努力啊。"<br><br>问题出在哪？他刷完一套题，对答案只看分数，错题扫一眼解析就过。<b>一百多套题刷完，脑子里没有留下任何一道题的"教训"。</b> 他的刷题量是别人的三倍，但学习量——是零。<br><br>后来带学老师让他干了一件事：每天只做 20 道题，但每道都要往深了挖——为什么选这个？其他选项错在哪？考的知识点是什么？有没有更快的解法？刚开始他嫌太慢，坚持一周后，同一类型错误率断崖式下降。他终于明白了：<b>20 道精刷，比 200 道稀里糊涂管用十倍。</b></div>
+      </div>
+      <div class="gray-check">
+        <div class="label"></div>
+        <div class="body">做完一套行测，你花在复盘上的时间，有做题时间的一半吗？如果没有——这第一种假努力，你大概率中了。</div>
+      </div>
+      <p><b>为什么这是假努力</b>：你把"刷题数量"当成了"进步速度"。刷题给你一种"我在前进"的错觉，但不复盘意味着你刷的每一道题都只是在反复确认——"嗯，这个知识点我还是不会。"</p>
+      <div class="intro-callout">数量不等于质量。刷题不是目的，通过刷题找到你不会的东西然后补上——这才是目的。</div>
+
+      <h4 class="minor-title">形态二：只听课，不刷题——"假性学会"</h4>
+      <p><b>典型表现</b>：课程刷了一节又一节，笔记记得漂漂亮亮，荧光笔标记密密麻麻。老师讲的每个知识点都觉得"懂了""明白了""原来如此"。但打开题本——不会做。</p>
+      <p>还有一种更隐蔽的版本——<strong>挂机式听课</strong>。视频开着，人坐在电脑前，但脑子根本没跟上，甚至刷着手机。老师讲例题懒得暂停自己做，直接听讲解。老师说"这道题很重要建议大家做一下"，心想"一会儿再做"——然后就没有然后了。听完一节课，笔记也记了，但关上视频一问——这节课讲了什么？说不出来。</p>
+      <div class="gray-check">
+        <div class="label"></div>
+        <div class="body">你听课和刷题的时间比例是多少？如果听课占了七成以上——这是第二种。</div>
+      </div>
+      <p><b>为什么这是假努力</b>：听课是被动接收，刷题是主动提取。考试考的是后者。听课有人讲给你听，你只需要跟着点头。但刷题你得自己动脑子——从读题到分析到计算到判断，每一步都要自己来。省力的路不走心，走心的路不省力。</p>
+      <div class="red-line">
+        <div class="label"></div>
+        <div class="body">有一个隐蔽的坑：听完课马上做题，正确率看着还行——但这只是因为短期记忆还在。老师刚讲的知识还在脑子里热乎着，你只是做了个"搬运"。过两天再做同样的题你就懵了。老师讲题时你觉得思路清晰，是因为别人帮你把路标好了，你只需要跟着走；考场上面前是一片荒地，你要自己找路——没人帮你念解题思路。</div>
+      </div>
+
+      <h4 class="minor-title">形态三：只背素材，不动笔写</h4>
+      <p><b>典型表现</b>（申论和面试备考的重灾区）：</p>
+      <ul>
+        <li>金句背了一堆，政策文件抄了半本，人民日报评论员文章剪了一整个文件夹。但一道完整的大作文没写过</li>
+        <li>总告诉自己"等我再多积累一点再开始动笔"——然后永远在积累，永远没有开始</li>
+        <li>面试逐字稿默念了无数遍，但从没开过手机录像、从没对着真人开口说过</li>
+      </ul>
+      <div class="gray-check">
+        <div class="label"></div>
+        <div class="body">你的申论备考，是不是百分之九十都在"积累素材"，百分之十都不到在"动笔写题"？如果是——第三种。</div>
+      </div>
+      <p><b>为什么这是假努力</b>：背是输入，写/说是输出。考试考的是输出。你建了一个巨大的素材仓库，但从没练过"从仓库调货"——考场上要么想不起来用，要么用得很生硬。就像背了一整本菜谱但从没进过厨房，第一次炒菜就是考试那天。</p>
+
+      <h4 class="minor-title">形态四：感动自己式刷题——重数量不重质量</h4>
+      <p><b>典型表现</b>：</p>
+      <ul>
+        <li>每天计时打卡"今天做了 200 道题"，但没有一道是"慢慢想透"的</li>
+        <li>模考成绩不好就立刻再来一套——想用下一套的分数证明自己——结果越做越差，心态越做越崩</li>
+        <li>朋友圈天天发备考打卡，学习时长拉满，但只有自己知道实际效率有多低</li>
+      </ul>
+      <div class="story-box">
+        <div class="label"></div>
+        <div class="body">挑自己擅长的题型反复刷——比如言语理解里的主旨概括题，做得又快又好，心里还挺美。但真正头疼的判断推理复杂逻辑题，下意识逃避、拖延，碰都不想碰。结果擅长的越来越擅长，短板的永远在短板。分数怎么拉都拉不上去。</div>
+      </div>
+      <div class="gray-check">
+        <div class="label"></div>
+        <div class="body">你有没有用"我今天刷了几道题"来安慰自己"今天没白过"？如果有——第四种。</div>
+      </div>
+      <p><b>为什么这是假努力</b>：你把"刷题"当成了任务完成，而不是能力提升。一套卷子做完，你脑子里多了什么？如果答案是"没有"，那你只是完成了"动作"，而不是完成了"学习"。</p>
+
+      <h4 class="minor-title">形态五：用"粗心"当万能借口——归因停在表面</h4>
+      <p><b>典型表现</b>：</p>
+      <ul>
+        <li>资料分析频繁抄错数、看错行，归结为"粗心了"——然后就没有然后了</li>
+        <li>每次复盘结论都是"下次注意""下次仔细点""下次不要再犯"——这种没有任何操作性的结论，等于在说"我不打算解决这个问题"</li>
+        <li>错因永远在"粗心""状态不好""运气差""这题太偏了"这几个词之间循环</li>
+      </ul>
+      <div class="gray-check">
+        <div class="label"></div>
+        <div class="body">翻开你的错题本，看看错因那栏写了什么。如果出现最多的词是"粗心"——第五种。</div>
+      </div>
+      <p><b>为什么这是假努力</b>：你把"症状"当成了"病因"。"粗心"不是原因，是结果。真正的病因可能是：太相信瞬时记忆（应该回材料里打草稿）、对材料没有全局认知（应该提前扫读材料结构）、审题习惯有问题（应该圈关键词再读题）。停在"粗心"这个表面上，等于宣告"到此为止，不往下挖了"。</p>
+      <div class="red-line">
+        <div class="label"></div>
+        <div class="body">当你把自己的问题归结为"粗心""状态不好""运气差"这种无法操作的词时——你已经在假努力了。真正的归因一定是具体的、可以改进的：哪一个动作错了？哪一个步骤可以加一个检查点？问不到这个颗粒度，就别指望下次不错。</div>
+      </div>
+
+      <h4 class="minor-title">形态六：贪多嚼不烂——囤资料、攒方法、集邮课程</h4>
+      <p><b>典型表现</b>：</p>
+      <ul>
+        <li>网盘里存了几十 G 资料：各路老师讲义、各机构真题、大神笔记。每次看到推荐就下载收藏——但绝大多数连点开都没点开过</li>
+        <li>方法学了一大堆：代入排除法、图示法、估算法、特征数字法……每个都知道一点，每个都不精通。一做题，脑子里方法打架，不知道该选哪个</li>
+        <li>集邮式听课：言语听 A 老师，判断听 B 老师，数量听 C 老师，资料听 D 老师——想"博采众长"，结果每个老师的体系都没学透，做题时各种思路混在一起，最后凭感觉选</li>
+      </ul>
+      <div class="story-box">
+        <div class="label"></div>
+        <div class="body">有个考生收藏了十几个老师的课程，每个老师的方法都学了皮毛。一到做题，A 老师的方法说先看选项、B 老师说先读题干、C 老师说找关键词——三个方法在大脑里同时响，最后他干脆凭感觉盲选。更惨的是网盘——每次刷到"上岸必备资料包""行测秒杀 100 招"就忍不住下载，存了几十 G，但从没打开过。下载的那一刻他觉得很安心——好像下载了就等于学会了。后来他把网盘里从没动过的资料全删了，只留近十年真题+一套讲义+一门课，做题时脑子反而清爽了。</div>
+      </div>
+      <div class="gray-check">
+        <div class="label"></div>
+        <div class="body">你现在同时在跟几个老师？网盘里存了多少从没打开过的文件？如果答案让你自己都心虚——第六种。</div>
+      </div>
+      <p><b>为什么这是假努力</b>：你在用"拥有"替代"掌握"。下载了 = 好像学了，收藏了 = 好像会了。但资料多不代表学得好，方法多不代表分数高。方法不在多，而在精——与其学十种都一知半解，不如吃透两三种，用到形成本能反应。</p>
+
+      <h4 class="minor-title">形态七：备考拖延症——"准备-焦虑-拖延-自责"的死循环</h4>
+      <p><b>典型表现</b>：</p>
+      <ul>
+        <li>计划列得完美无缺——每天几点到几点干什么，颜色分区分得漂漂亮亮</li>
+        <li>执行三天就崩——任务太重、状态不好、今天先休息明天补</li>
+        <li>崩了之后推翻重来，列一个新计划——重复上面的循环</li>
+        <li>内心深处有个声音："等我准备好了再全力冲刺"——然后这个"准备好了"的时刻从没来过</li>
+      </ul>
+      <div class="gray-check">
+        <div class="label"></div>
+        <div class="body">你最近三个月，换过几次"每日计划表"？如果超过三次——第七种。</div>
+      </div>
+      <p><b>为什么这是假努力</b>：做计划是最容易获得"我在努力"的满足感的事——只需要一张纸一支笔，不用动任何脑子。但做完计划之后你真去执行了吗？备考拖延症的本质不是懒，是<strong>任务太庞大、反馈太遥远</strong>。你面对的不是"写完这页作业"，是"可能半年后才能看到结果的考试"。大脑面对遥远的回报是麻木的，面对眼前的轻松是渴望的。这个循环每转一圈，备考精神内耗就加重一层——列计划时踌躇满志，崩盘时自我否定，能量全耗在"想做但做不到"的拉扯上。</p>
+
+      <h4 class="minor-title">形态八：注意力碎片化——"身在桌前，心在别处"</h4>
+      <p><b>典型表现</b>：</p>
+      <ul>
+        <li>人明明坐在书桌前，题也摊开着，可脑子里全是工作的事、生活的事、担心自己考不上</li>
+        <li>做不了几道题就开始走神，忍不住刷手机——看一条短视频，回过神来半小时没了</li>
+        <li>学习时手机就放在桌面上、消息通知开着、电脑挂着微信——每一个都是走神的触发器</li>
+        <li>一天在书桌前耗了六小时，真正有效学习——可能就两小时不到</li>
+      </ul>
+      <div class="story-box">
+        <div class="label"></div>
+        <div class="body">有人打开题本做了三道题，手机亮了一下，看一眼微信——然后顺手刷了十分钟朋友圈。回来再做两道，又想起今天有快递要取、明天有表格要交。抬头一看时间，一个小时过去了，题做了不到十道。但晚上睡前发朋友圈："又是备考的一天，加油！"——点赞越多，心里的虚越深。</div>
+      </div>
+      <div class="gray-check">
+        <div class="label"></div>
+        <div class="body">你学习的时候，手机在哪？如果在视线范围内——第八种你跑不掉。</div>
+      </div>
+      <p><b>为什么这是假努力</b>：很多人把走神归结为"我不够自律"，然后陷入自责→更学不进去→更自责的死循环。但问题出在机制上，不是出在人格上。你把大脑放在了一个它最容易被劫持的环境里——手机在桌上、通知开着、任务模糊。它不是不想专注，是需要你帮它把干扰源清掉。</p>
+
+      <h4 class="minor-title">形态九：迷信秒杀技巧——用"捷径"绕开基本功</h4>
+      <p><b>典型表现</b>：</p>
+      <ul>
+        <li>沉迷各种"蒙题技巧""秒杀公式""看到什么选什么"，以为掌握了这些就能弯道超车</li>
+        <li>资料分析的公式只记住了名字，没真正理解增长率和增长量、基期和现期的确切含义和关系。题目稍微变个花样——公式套上去也是错的</li>
+        <li>判断推理的逻辑关系（充分条件、必要条件、矛盾关系、反对关系）学得囫囵吞枣，只记了几个口诀。题目绕一点——口诀失灵</li>
+        <li>言语理解只靠"找转折词""看首尾句"，凭语感做题，遇到反套路题直接翻车</li>
+      </ul>
+      <div class="gray-check">
+        <div class="label"></div>
+        <div class="body">你有没有花过大量时间搜集"蒙题技巧"和"秒杀口诀"，但连五年内的真题都还没完整做过一遍？如果有——第九种。</div>
+      </div>
+      <p><b>为什么这是假努力</b>：秒杀技巧的吸引力在于——它承诺你不费力气就能做对题。但行测真题的设计，恰恰是反套路的。出题人每年都在研究市面上的"技巧"，然后专门设计题目让这些技巧失效。</p>
+      <div class="red-line">
+        <div class="label"></div>
+        <div class="body">秒杀技是在扎实基础之上的锦上添花，不是空中楼阁。地基不稳，上面盖什么都会塌。基础打牢了，技巧才能为我所用——而不是被它们带进沟里。</div>
+      </div>
+      <p><b>一个检验标准</b>：如果你学到的"技巧"不能解释"为什么这样选是对的"，那它就是不可靠的。</p>
+
+      <h4 class="minor-title">形态十："学习脑"冒充"考试脑"——把考试当学术研究</h4>
+      <p><b>典型表现</b>：</p>
+      <ul>
+        <li>喜欢通读整个教材，以理解为王，争取弄懂每一个细节</li>
+        <li>每次都觉得自己懂了，但从来没有输出和考核</li>
+        <li>前期把真题束之高阁，期待"学透彻以后"再开始做真题</li>
+        <li>考前才开始做真题，发现正确率惨不忍睹——大破防</li>
+        <li>第二年、第三年备考，像推着石头上山的西西弗斯，每年都在经历一模一样的剧本</li>
+      </ul>
+      <div class="story-box">
+        <div class="label"></div>
+        <div class="body">第一年他把粉笔系统课从头到尾听了两遍，笔记做了三大本，每个知识点都力求"弄懂弄透"。真题舍不得碰——"等我学完了再用"。结果考前一个月第一次做真题，行测 51 分。大破防。他以为是自己学得还不够，第二年更努力地听课——剧本一模一样。第三年他终于换了打法：第一天就上真题，用真题告诉他该学什么、学到什么深度。不再追求"学懂每一个细节"，只追求"这道题我能稳定做对"。分数从 51 涨到 72——不是因为他更聪明了，是因为他终于用了考试脑。</div>
+      </div>
+      <div class="gray-check">
+        <div class="label"></div>
+        <div class="body">你是不是在"先把所有知识点学完"之前，都舍不得碰真题？如果是——第十种。</div>
+      </div>
+      <p><b>为什么这是假努力</b>：你用的是"学习脑"，而考试需要的是"考试脑"。两者的底层逻辑完全不同：</p>
+      <div class="table-wrap">
+        <table class="diagnostic-table">
+          <thead>
+            <tr><th></th><th>学习脑</th><th>考试脑</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>心态</td><td>对知识"有情"，希望所有知识都学透</td><td>对知识"无情"，唯一目的是通过考试</td></tr>
+            <tr><td>策略</td><td>靠时间磨出结果</td><td>一切快准狠，以考定学</td></tr>
+            <tr><td>路径</td><td>先学透再考核</td><td>真题驱动，边考边学</td></tr>
+            <tr><td>标准</td><td>我学懂了没</td><td>我能做对没</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>很多人考了好几年都没上岸，核心问题就这一句话：<strong>他们一直在学习，从来没有真正在备考。</strong> 他们对知识产生了"有情"状态，舍不得放弃任何一个知识点，想把每个细节都搞懂——但考试是残忍的、功利的、只看分数的。你不把"以考定学"放在第一天，每年都会重演同样的剧本。</p>
+      <div class="red-line">
+        <div class="label"></div>
+        <div class="body">不完成从"学习脑"到"考试脑"的认知转换，你每年都在走同一条死胡同：前期慢慢学、真题留到最后、考前发现啥都不会、大破防——然后进入下一年循环。打破这个循环只有一个办法：<strong>把真题从"考前检验"变成"日常工具"。</strong> 备考第一天就碰真题，用真题告诉你该学什么、不该学什么。</div>
+      </div>
+
+      <!-- §1.2 -->
+      <h3 class="sub-title" id="sec-1-2">§1.2 十种形态的纠正动作</h3>
+      <p>光认出假努力还不够——你得知道怎么改。以下每个纠正动作对应上面的一种形态。<strong>别想着一次性全改完——先挑你最严重的 2-3 种，改到位再管其他的。</strong></p>
+
+      <h4 class="minor-title">纠正一（对应形态一）：复盘时间至少等于做题时间的一半</h4>
+      <p>做完题不是结束，是开始。每道错题追问到底：</p>
+      <ol>
+        <li>我为什么选错了？（不是"粗心"，是具体的操作失误或知识盲区）</li>
+        <li>正确答案的逻辑链是什么？从读题到选出答案，一步步怎么走的？</li>
+        <li>下次遇到同类题，我看到什么信号就知道——这是上次的坑？</li>
+      </ol>
+      <p><b>硬指标</b>：做完一套行测 2 小时，复盘至少花 1 小时。做不到？你的刷题就是在原地踏步。</p>
+
+      <h4 class="minor-title">纠正二（对应形态二）：听一节课，立刻做对应的题</h4>
+      <ul>
+        <li>听课和刷题的时间比例调到 <strong>3:7</strong>。宁可少听一节，不可听完不做</li>
+        <li>每听完一个知识点，马上做 20 道对应的题——趁热打铁</li>
+        <li><strong>不对答案先自我评估</strong>：做完 10 道题，先别看答案，问自己——哪道拿不准？为什么拿不准？这个动作逼你诚实地面对自己</li>
+        <li><strong>隔夜检验法</strong>：第二天早上，把昨天的错题重新做一遍。短期记忆退去后，能留下来的才是你的</li>
+        <li>把"听完课 = 学完"的标准，改成"做对题 = 学会"</li>
+      </ul>
+      <div class="blue-tip">
+        <div class="label"></div>
+        <div class="body"><b>白纸检测法</b>：关上课程视频，拿一张白纸，把你刚学的内容默写出来（框架 + 核心方法即可）。写不出来的——就是你以为会了但实际不会的。白纸比任何"我觉得我会了"都诚实。</div>
+      </div>
+
+      <h4 class="minor-title">纠正三（对应形态三）：先写出一篇"垃圾"，再迭代</h4>
+      <ul>
+        <li>申论大作文：今天就写一篇。第一篇一定是垃圾——没关系，垃圾才能回收，空白连回收的价值都没有</li>
+        <li>面试：今天就对着手机录一段。第一段一定磕磕巴巴——没关系，回看才能发现哪里卡壳</li>
+        <li>写出来之后，对照参考答案找差距，改一版再写。三轮打磨，比背一个月素材管用十倍</li>
+        <li><strong>"先完成再完美"</strong>——不要让"准备充分了再开始"成为永远不开始的借口</li>
+      </ul>
+
+      <h4 class="minor-title">纠正四（对应形态四）：区分"计时刷题"和"精刷复盘"</h4>
+      <ul>
+        <li><b>计时刷题</b>（练速度）：严格计时，全套模拟考场环境。一周 2-3 套就够了</li>
+        <li><b>精刷复盘</b>（练深度）：不限时，一道题可以想 10 分钟，追问每一个选项。其余时间全用来精刷</li>
+        <li><b>每周必须拿一天攻短板</b>：挑你最怕的题型，专门练它。逃避短板是感动自己式刷题最隐蔽的版本</li>
+        <li>进度衡量的正确方式不是"这周刷了几套"，是——<strong>"这周补上了哪几个知识漏洞？"</strong></li>
+      </ul>
+
+      <h4 class="minor-title">纠正五（对应形态五）：把"粗心"这个词从复盘词汇里删掉</h4>
+      <p>每个"表面问题"至少追问三层，追到具体可操作：</p>
+      <ul>
+        <li>抄错数 → 为什么抄错？→ 太相信瞬时记忆，没用笔指着材料 → 怎么改？→ 回材料里打草稿，下笔前逐字核对</li>
+        <li>看错行 → 为什么看错？→ 材料太密，没有标行号 → 怎么改？→ 做资料分析时用尺子或手指逐行跟读</li>
+        <li>找数慢 → 为什么慢？→ 对材料没有全局认知，每次都从头找 → 怎么改？→ 做题前先花 30 秒扫读材料结构</li>
+      </ul>
+      <div class="intro-callout"><b>错因追问到"能改"才算停。</b> 问不到具体动作层面，那个错因就只是自我安慰。</div>
+
+      <h4 class="minor-title">纠正六（对应形态六）：做减法——资料只留核心三样</h4>
+      <ul>
+        <li>资料：近十年真题 + 一套系统讲义 + 一位老师的课程。其余——删，或者至少从桌面上移走</li>
+        <li>老师：一个模块只跟一位老师，学扎实再换。别同时跟三四个——方法体系会打架</li>
+        <li>方法：试 2-3 种后锁定最顺手的，反复练到本能。练到本能的方法才是你的</li>
+        <li>每周花 10 分钟清理"下载了从没动过"的资料——清一次，大脑就轻一次</li>
+      </ul>
+
+      <h4 class="minor-title">纠正七（对应形态七）：用"2 分钟法则"打破拖延死循环</h4>
+      <ul>
+        <li>不想学？对自己说："我就打开题本做 2 分钟，2 分钟后想停就停"</li>
+        <li>2 分钟后，绝大多数情况下你不会停。因为最难的不是学，是"开始"</li>
+        <li>如果 2 分钟后真的不想学——那就真的停。至少今天你没有用拖延来惩罚自己</li>
+      </ul>
+      <p><b>配套策略</b>：把大目标拆成微任务。</p>
+      <ul>
+        <li>❌ "今天学行测" → 太模糊，大脑无从下手</li>
+        <li>❌ "今天做完一套行测卷子" → 太重，不想开始</li>
+        <li>✅ "今天做 1 篇资料分析" → 轻到不可能失败</li>
+      </ul>
+      <p>做完 1 篇之后，惯性会推着你继续。</p>
+
+      <h4 class="minor-title">纠正八（对应形态八）：环境改造——别跟意志力较劲</h4>
+      <ol>
+        <li><strong>手机物理隔离</strong>：学习时手机放到另一个房间或锁进抽屉。目光所及之处不能有手机</li>
+        <li><strong>任务精确到分钟</strong>：把"今天学行测"拆成"9:00-9:30 资料分析 4 篇 + 对答案；9:30-10:00 言语 30 题"</li>
+        <li><strong>番茄钟 25+5</strong>：计时器倒计时的压迫感，能帮你撑过最容易走神的前 5 分钟</li>
+        <li>走神了就拉回来，不责备自己。每一次把注意力拉回来，都是在训练注意力肌肉</li>
+      </ol>
+
+      <h4 class="minor-title">纠正九（对应形态九）：区分"方法"和"捷径"</h4>
+      <ul>
+        <li><b>方法</b>：告诉你"为什么要这样做"，让你在任何题目上都能适用 → 大胆学</li>
+        <li><b>捷径</b>：告诉你"遇到这种情况这样选"，出题人稍微变一下你就翻车 → 当备胎</li>
+      </ul>
+      <p>正确的路径：先扎实学好基础（公式、概念、逻辑关系）→ 在大量练习中自然形成自己的提速技巧 → 把秒杀技巧当考场最后几分钟的备胎，不当主力。</p>
+
+      <h4 class="minor-title">纠正十（对应形态十）：从第一天就用"考试脑"备考</h4>
+      <ol>
+        <li><strong>尽早、大量地研究真题</strong>。不是做一遍就扔——是研究出题人的思路：他爱考什么、怎么设坑、在哪筛人</li>
+        <li>研究真题时问：高频考点和低频考点分别是什么？哪种题型决定分水岭？</li>
+        <li><strong>以考定学</strong>：真题告诉你该学什么、学到什么深度。不是教材告诉你</li>
+        <li>别再用"我在学习"安慰自己。每天结束问自己："我今天为'能做对更多的题'做了什么？"</li>
+      </ol>
+      <div class="blue-tip">
+        <div class="label"></div>
+        <div class="body">考公映射的不是你对知识的掌握有多全面，而是你对规则的敏感度 + 常识 + 社会意识形态。规则永远大于内容。先把规则搞明白，才能对内容有清晰的认知。</div>
+      </div>
+
+      <!-- §1.3 -->
+      <h3 class="sub-title" id="sec-1-3">§1.3 三种最高发假努力的深度纠偏</h3>
+      <p>前面十种形态里，有三种出现频率最高、危害最大、纠正起来也最容易反复。这一节，把每种剥到操作层。</p>
+
+      <h4 class="minor-title">深度纠偏一：不复盘——所有假努力的最大公约数</h4>
+      <p>如果只用一句话总结考公失败的最大原因——<strong>不是刷的题不够多，是刷完没有复盘。</strong></p>
+      <p><b>为什么复盘这么难坚持？</b></p>
+      <p>因为复盘是反人性的。做题有正反馈——对得多就开心。但复盘意味着你要反复盯着自己的错误看、承认"这个地方我真的不会"、然后花大量时间去改——这个过程不愉悦、不轻松、不立竿见影。</p>
+      <p>但这就是分水岭。能不能承受这种不愉悦，决定了你能不能从 60 分走到 75 分。</p>
+      <p><b>复盘的四步法：</b></p>
+      <ol>
+        <li><b>找错因，追到底</b>：不是写"粗心"，是追到具体操作——"资料分析第三篇第 2 题，因为没用笔指着数据行，从第 3 行抄到了第 4 行"</li>
+        <li><b>合上答案重做</b>：看解析 ≠ 复盘。合上解析，自己从头到尾再做一遍——这时候你才知道真懂还是假懂</li>
+        <li><b>同类归并</b>：把同一考点、同一类型的错题放一起。5 道同类错题摆一排，出题人设坑的规律自己跳出来</li>
+        <li><b>写"下次怎么避"的动作指令</b>：不是"下次注意"，是"下次看到同比增长率比较，先把正负号标在数据旁边再计算"</li>
+      </ol>
+      <div class="blue-tip">
+        <div class="label"></div>
+        <div class="body">不同模块复盘重点不同：资料重"数据定位+计算路径"，判断重"逻辑链推演"，言语重"选与不选的那条分界线"，数量重"认出该放弃的题"，常识重"排除逻辑"。具体每个模块的复盘模板，详见 第五章 各模块详解。但不管什么模块——<b>复盘时间不低于做题时间的一半，这条铁律不能破。</b></div>
+      </div>
+
+      <h4 class="minor-title">深度纠偏二：假性学会——听课上瘾，做题恐惧</h4>
+      <p>"假性学会"是听课和做题之间的一道鸿沟。跨过去的人分数开始涨，跨不过去的人永远在积累"听了很多课"的虚假安全感。</p>
+      <p><b>为什么听课会上瘾？</b></p>
+      <p>因为听课给你三种即时满足：① 老师在替你思考，你不需要费劲；② 每听懂一个知识点，大脑释放多巴胺——"我学会了"；③ 笔记记满了，视觉上有一种"今天收获满满"的错觉。</p>
+      <p>这三种满足，刷题全都给不了你。刷题是孤独的、费力的、而且会频繁告诉你——"其实你还没学会。"</p>
+      <p><strong>你在逃避的不是学习，是被刷题暴露无知的那种不舒服。</strong></p>
+      <p><b>纠正路径：</b></p>
+      <ol>
+        <li>听完一节课，关上视频，先用白纸检测法默写框架——诚实面对自己到底吸收了多少</li>
+        <li>马上做对应的 20 道题，不对答案，先标注你拿不准的那几道</li>
+        <li>对答案，把错的和拿不准的回头看课程对应部分。这时候听课效率最高——因为你是带着"我哪里不会"去的</li>
+        <li>隔夜检验：第二天把错题重做一遍。能稳定做对，才算真会</li>
+        <li>同一个模块学完后，做一次不看书的知识框架默写——这才是你脑子里真正剩下的东西</li>
+      </ol>
+      <div class="blue-tip">
+        <div class="label"></div>
+        <div class="body">听课的边际效应是递减的——从 1 到 8 分很容易，从 8 到 10 分极难。先做题，找准弱项再带着问题听课，比盲目通听所有课程高效得多。一个模块分数已经很稳了——只刷题，不听课。</div>
+      </div>
+
+      <h4 class="minor-title">深度纠偏三：感动自己式刷题——用数量骗自己</h4>
+      <p>感动自己式刷题的人，往往是备考人群里"看起来最努力"的那一批。但也是最容易崩溃的那一批——因为他们付出了巨大的时间成本，却看不到回报。</p>
+      <p><b>核心问题</b>：把"刷题"当成目的，而不是手段。</p>
+      <p>刷题是手段。真正的目的是——通过刷题找到你不会的东西，然后把它变成你会的。如果你刷完 200 道题，没有发现任何"我之前不知道"的东西，这 200 道题白刷了。</p>
+      <p><b>精刷的正确操作：</b></p>
+      <ol>
+        <li>选 20 道同一题型的高质量真题（不要用模拟题）</li>
+        <li>不限时，每道题慢慢想。允许一道题想 10 分钟</li>
+        <li>做完后逐道追问：这道题我确定吗？用排除法了吗？有没有更快的路？</li>
+        <li>把 20 道题放在一起横向对比——寻找共性和规律</li>
+        <li>总结出这一题型的一条"你自己发现的规律"。不需要好看，但必须是自己的</li>
+      </ol>
+      <p><b>刷题的时间分配</b>：每周 2-3 套计时套卷（练节奏），其余时间全部精刷 + 复盘。刷题和复盘时间比例不低于 5:5。</p>
+
+      <h4 class="minor-title">一个把十种形态串起来的元问题</h4>
+      <p>不管你的假努力长什么样，每天结束前，问自己这一个问题就够了：</p>
+      <div class="meta-question">
+        <div class="label">★ 元问题 ★</div>
+        <div class="q">"今天的学习，我到底学会了什么——能具体到'哪个知识点从不会到会了'的程度吗？"</div>
+        <div class="ans">
+          能回答出来 → <span class="yes">今天是真努力，不管刷了多少题。</span><br>
+          答不上来 → <span class="no">今天是假努力，不管学了多长时间。</span>
+        </div>
+      </div>
+      <p>这个问题简单到不像话。但坚持每天问——它会在不知不觉中把你的整个备考方式拧回到正确的轨道上。</p>
+
+      <!-- §1 行动清单 -->
+      <div class="chapter-action-wrap">
+        <h3 class="sub-title" style="margin-top:18px">📋 本章行动清单</h3>
+        <div class="action-list">
+          <ul>
+            <li class="sub-label">今天就做</li>
+            <li onclick="toggleCheck(this)">对照 §1.1 的十种形态，诚实圈出你中了的那几条</li>
+            <li onclick="toggleCheck(this)">从你圈出的形态中，选最严重的 1-2 种作为本周重点攻克对象</li>
+            <li onclick="toggleCheck(this)">把"粗心"这个词从你的错题本里删掉，下次写错因时追问到具体操作层面</li>
+            <li onclick="toggleCheck(this)">立刻三选一：① 删掉网盘里一个月没动过的资料 ② 拿出昨天的错题，把"粗心"改成具体的操作失误 ③ 把手机设一个明天早上的锁机时段</li>
+            <li class="sub-label">本周内完成</li>
+            <li onclick="toggleCheck(this)">检查听课和刷题的时间比例。如果听课超过 50%，这周开始调到 3:7</li>
+            <li onclick="toggleCheck(this)">做一次精刷实验：挑一个你最头疼的题型，只做 20 道，但每道都深度复盘。感受一下"精刷"和"猛刷"的差别</li>
+            <li onclick="toggleCheck(this)">整理资料库——删掉/移走至少一半从没打开过的文件。只留真题、讲义、一门课</li>
+            <li onclick="toggleCheck(this)">学习时手机物理隔离——放到另一个房间或锁进抽屉</li>
+            <li class="sub-label">养成习惯</li>
+            <li onclick="toggleCheck(this)">每天结束前用"元问题"问自己：今天学会了什么——具体到知识点</li>
+            <li onclick="toggleCheck(this)">每做完一套题，复盘时间不低于做题时间的一半</li>
+            <li onclick="toggleCheck(this)">从备考第一天起就用真题驱动——别等"学完再碰真题"</li>
+            <li onclick="toggleCheck(this)">每周做一次进度复盘：不是在数"刷了几套题"，是在数"补上了几个知识漏洞"</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="red-line">
+        <div class="label"></div>
+        <div class="body"><b>假性努力的最后一条红线</b><br>假性努力最阴险的地方——它让你在错的方向上用力越猛，离上岸越远。<strong>方向对了，慢也是快；方向错了，快也是慢。</strong> 看完这一章，如果你只能带走一件事，就是那个元问题。今晚睡前问自己一遍。明天晚上再问一遍。一直问到你能不假思索地说出"我今天学会了什么"——那时候假性努力已经跟你没关系了。</div>
+      </div>
+
+    </div>
+
+    <p style="text-align:center;color:var(--text-3);font-size:13px;margin-top:48px">
+      — 以上为 §0 导言 + §1 假性努力 完整正文 · 诊断驱动式呈现（B 配色） —
+    </p>
+  </div>
+</section>
+
+<script>
+/* ============ 数据 ============ */
+const GROUPS = [
+  {tag:"第一组", title:"你是谁，你从哪来（3 题）", hint:"→ 🧭 认知扫盲维度", dim:"cognition", qIds:[1,2,3]},
+  {tag:"第二组", title:"你在哪个阶段，你跑得动吗（3 题）", hint:"→ ⏱️ 时间战场维度", dim:"time", qIds:[4,5,6]},
+  {tag:"第三组", title:"行测——你的问题出在哪（3 题）", hint:"→ ⚔️ 方法瓶颈维度", dim:"method", qIds:[7,8,9]},
+  {tag:"第四组", title:"申论——你还在背模板吗（2 题）", hint:"→ 🧠 心态/方向维度", dim:"mind", qIds:[10,11]},
+  {tag:"第五组", title:"心态和习惯——最容易被忽略的暗坑（4 题）", hint:"→ 🧠 心态/方向维度（续）", dim:"mind", qIds:[12,13,14,15]},
+];
+
+const QUIZ = [
+  // group 1
+  {gid:0, qid:1, dim:"cognition", text:"你目前的状态是？", note:null, opts:[
+    {k:"A",t:"在校大三大四，时间有，但完全不知道从哪下手", score:1},
+    {k:"B",t:"一边上班一边备考，每天能挤出的有效时间不到 3 小时", score:2},
+    {k:"C",t:"已经考过至少一次，这次是二战或三战", score:3},
+    {k:"D",t:"刚毕业或待业中，可以全职备考但有经济压力", score:1},
+  ]},
+  {gid:0, qid:2, dim:"cognition", text:"你知道行测五个模块，投入同样的100小时——哪个提分最多、哪个基本打了水漂吗？", note:null, opts:[
+    {k:"A",t:"完全没概念。我每个模块平均分配时间，觉得都差不多重要", score:1},
+    {k:"B",t:"大概知道资料分析重要、常识不太值，但具体每个模块的投入产出数据说不清楚", score:2},
+    {k:"C",t:"清楚知道性价比排名，并且已经在按优先级分配每天的时间", score:3},
+  ]},
+  {gid:0, qid:3, dim:"cognition", text:"你手里现在有多少备考资料/课程？", note:null, opts:[
+    {k:"A",t:"还没开始买，不知道买什么、看哪个老师", score:1},
+    {k:"B",t:"网盘里存了几十 G，关注了七八个老师的课，但大部分没打开过", score:2},
+    {k:"C",t:"只留了核心几样——真题、一本系统讲义、一门课，够用", score:3},
+  ]},
+  // group 2
+  {gid:1, qid:4, dim:"time", text:"离你计划参加的最近一次考试，还有多久？", note:null, opts:[
+    {k:"A",t:"不到 2 个月——冲刺了", score:1},
+    {k:"B",t:"2-6 个月——拔高期", score:2},
+    {k:"C",t:"6 个月以上——长线作战", score:3},
+  ]},
+  {gid:1, qid:5, dim:"time", text:"你每天能保证的\"有效学习时间\"大概多少？", note:"有效学习 = 脑子真的在动，不是坐在书桌前熬钟头。", opts:[
+    {k:"A",t:"3 小时以内，下班后就剩一口气", score:1},
+    {k:"B",t:"3-6 小时，还算正常", score:2},
+    {k:"C",t:"6 小时以上，可以全天投入", score:3},
+  ]},
+  {gid:1, qid:6, dim:"time", text:"你做套卷时会严格计时吗（包括涂答题卡）？", note:null, opts:[
+    {k:"A",t:"从来没计过时，不限量不限速慢慢做", score:1},
+    {k:"B",t:"偶尔计时，但不严格，也没练过涂卡", score:2},
+    {k:"C",t:"每套都按考试时间严格掐表，涂卡也当考试练", score:3},
+  ]},
+  // group 3
+  {gid:2, qid:7, dim:"method", text:"做完一套行测，你花在复盘上的时间，大概是做题时间的多少？", note:null, opts:[
+    {k:"A",t:"做完对个答案、扫眼解析就翻篇了——10% 都不到", score:1},
+    {k:"B",t:"错题会认真看解析，但很少合上答案自己重做一遍", score:2},
+    {k:"C",t:"每道错题都追问原因，同类错题放一起比对，复盘时间至少是做题的一半", score:3},
+  ]},
+  {gid:2, qid:8, dim:"method", text:"你做行测时有固定的做题顺序和每个模块的时间上限吗？", note:null, opts:[
+    {k:"A",t:"没有，从第一题顺着往下做，做到哪算哪", score:1},
+    {k:"B",t:"有大致顺序，但没严格掐表，经常在某个模块超时", score:2},
+    {k:"C",t:"有固定顺序，每个模块掐死时间，到点就跳", score:3},
+  ]},
+  {gid:2, qid:9, dim:"method", text:"资料分析这个模块——行测性价比之王——你的状态是？", note:null, opts:[
+    {k:"A",t:"错得不多但做得太慢，一套资料分析能耗掉将近 40 分钟", score:1},
+    {k:"B",t:"公式都懂，但经常看错数、抄错数，每次都归结为\"粗心\"", score:2},
+    {k:"C",t:"速度和正确率都在线，是稳定拿分的底盘", score:3},
+  ]},
+  // group 4
+  {gid:3, qid:10, dim:"mind", text:"关于申论大作文，以下哪句最像你？", note:null, opts:[
+    {k:"A",t:"一篇完整的都还没写过，总想等\"积累够了再动笔\"", score:1},
+    {k:"B",t:"写了，但每篇都像在套模板，分数稳定在中低档", score:2},
+    {k:"C",t:"能稳定输出，但在立意深度和论证厚度上还有瓶颈", score:3},
+  ]},
+  {gid:3, qid:11, dim:"mind", text:"写申论小题时，你怎么处理材料里的原词？", note:null, opts:[
+    {k:"A",t:"尽量用自己的话转述，觉得直接抄材料会显得没水平", score:1},
+    {k:"B",t:"会抄一些材料原词，但不放心，又加了自己背的规范词混着用", score:2},
+    {k:"C",t:"主要用材料原词，只在需要概括提炼时才用自己的话", score:3},
+  ]},
+  // group 5
+  {gid:4, qid:12, dim:"mind", text:"你备考时最容易出现哪种情况？", note:null, opts:[
+    {k:"A",t:"计划列得完美，执行三天就崩，然后推翻重来——循环往复", score:1},
+    {k:"B",t:"听课听得停不下来，笔记记得满满当当，但打开题本就不会做", score:2},
+    {k:"C",t:"模考分数一掉就慌，开始怀疑\"我是不是考不上了\"", score:3},
+    {k:"D",t:"学不进去就刷手机，一条短视频接一条，回过神来半小时没了", score:1},
+  ]},
+  {gid:4, qid:13, dim:"mind", text:"你把题做错时，通常怎么写错因？", note:null, opts:[
+    {k:"A",t:"\"粗心了\"\"状态不好\"\"运气差\"\"这题太偏了\"", score:1},
+    {k:"B",t:"能说出是哪个知识点不会，但分析到这就停了", score:2},
+    {k:"C",t:"能追溯到做题时的具体操作失误——比如\"没在材料里打草稿，凭脑子记结果抄错行\"", score:3},
+  ]},
+  {gid:4, qid:14, dim:"mind", text:"行测和申论的时间分配，你目前是什么样的？", note:null, opts:[
+    {k:"A",t:"大部分时间都给了行测，申论基本没怎么动", score:1},
+    {k:"B",t:"两个都在学，但申论总有一种\"学得很虚、不知道学到了啥\"的感觉", score:2},
+    {k:"C",t:"两边都有稳定的节奏，分数也大致能匹配", score:3},
+  ]},
+  {gid:4, qid:15, dim:"mind", text:"回顾最近一周的备考——抛开分数——你能具体说出\"我到底学会了什么\"吗？", note:null, opts:[
+    {k:"A",t:"说不上来。感觉每天都在学，但问学了啥——脑子里空的", score:1},
+    {k:"B",t:"能大概说出学了哪个模块、听了什么课，但不够具体", score:2},
+    {k:"C",t:"能说清楚：资料分析的增长贡献率题型从不会到会了；定义判断正确率从六成提到了八成", score:3},
+  ]},
+];
+
+const ROUTES = [
+  {key:"A", name:"🅰️ 路线一：\"时间不够\"型——在职党 + 冲刺期", reason:"你的时间战场维度亮红灯——核心矛盾是取舍。", order:[
+    "§2 模块取舍 ← 先读这章。知道什么该放弃，比你咬牙硬学更重要",
+    "§4 时间规划 ← 把碎片时间拼成一张能坚持的网",
+    "§5 行测 ← 重点读资料分析、判断推理、言语理解",
+    "§9 避坑地图 ← 时间少的人更经不起踩坑",
+    "申论未动 → §6.1 思维差异",
+  ]},
+  {key:"B", name:"🅱️ 路线二：\"刷了很多题但分不动\"型——假性努力 + 瓶颈期", reason:"你的认知扫盲或方法瓶颈亮红灯——从数量切换到深度。", order:[
+    "§1 假性努力 ← 你最值的一章",
+    "§5 行测 ← 找到卡住的模块精读",
+    "§3 方法路由 ← 需要\"对的组合\"",
+    "§8 心态 ← §8.2 拔高期 + §8.6 急救",
+  ]},
+  {key:"C", name:"🅲 路线三：\"完全小白\"型——应届生 + 零基础", reason:"你的认知扫盲维度亮红灯——核心矛盾是扫盲。", order:[
+    "§4 时间规划 ← 先把框架搭好",
+    "§5 行测 ← 从资料分析开始",
+    "§6 申论 ← 同步启动，别走歪路",
+    "§1 假性努力 ← 提前知道哪些是坑",
+  ]},
+  {key:"D", name:"🅳 路线四：\"二战三战\"型——有基础但上次没上岸", reason:"你的方法或心态亮红灯——复盘上次失败，换打法。", order:[
+    "§1 假性努力 ← 二战最大的隐蔽敌人",
+    "§3 方法路由 ← 换一套方法",
+    "§8 心态 ← §8.5 二战专属 + §8.6 急救",
+    "§5 / §6 ← 找到上次薄弱模块精准打击",
+  ]},
+  {key:"E", name:"🅴 路线五：\"偏科\"型——行测申论一条腿走路", reason:"你的申论相关题目亮红灯——矫正认知偏差。", order:[
+    "偏行测 → §6 申论全章，从 §6.1 思维差异开始",
+    "偏申论 → §5 行测全章，从资料分析和判断推理开始",
+    "两个都想提 → §2 + §3 重新分配精力",
+    "§9 避坑地图 ← 偏科专用坑",
+  ]},
+];
+
+/* ============ 状态 ============ */
+let state = {
+  current: "intro",
+  groupIdx: 0,
+  answers: {}, // qid -> {k, score, dim}
+};
+
+/* ============ 渲染 ============ */
+function go(screen){
+  // 校验：未答完问卷不能去 result
+  if(screen === "result" && !isQuizComplete()){
+    alert("请先完成 15 道诊断题，再查看结果。");
+    return;
+  }
+  state.current = screen;
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(screen + "-screen").classList.add("active");
+  // 顶部按钮高亮
+  document.querySelectorAll(".topnav button").forEach(b => b.classList.remove("active"));
+  const map = {intro:"nav-intro", result:"nav-result", content:"nav-content"};
+  if(map[screen]) document.getElementById(map[screen]).classList.add("active");
+  window.scrollTo({top:0, behavior:"smooth"});
+  if(screen === "quiz") renderGroup();
+  if(screen === "result") renderResult();
+}
+
+function isQuizComplete(){
+  return Object.keys(state.answers).length >= 15;
+}
+
+function renderProgress(){
+  const wrap = document.getElementById("quiz-progress");
+  wrap.innerHTML = "";
+  GROUPS.forEach((g,i) => {
+    const seg = document.createElement("div");
+    seg.className = "seg";
+    if(i < state.groupIdx) seg.classList.add("done");
+    if(i === state.groupIdx) seg.classList.add("current");
+    wrap.appendChild(seg);
+  });
+}
+
+function renderGroup(){
+  const g = GROUPS[state.groupIdx];
+  document.getElementById("group-tag").textContent = g.tag;
+  document.getElementById("group-title").textContent = g.title;
+  document.getElementById("group-hint").textContent = g.hint;
+  renderProgress();
+
+  const area = document.getElementById("questions-area");
+  area.innerHTML = "";
+  g.qIds.forEach(qid => {
+    const q = QUIZ.find(x => x.qid === qid);
+    const card = document.createElement("div");
+    card.className = "q-card";
+    let optsHtml = "";
+    q.opts.forEach(o => {
+      const sel = state.answers[qid] && state.answers[qid].k === o.k ? "selected" : "";
+      optsHtml += `<div class="opt ${sel}" onclick="selectOpt(${qid},'${o.k}',${o.score})">
+        <div class="radio"></div>
+        <div class="label"><b>${o.k}.</b> ${o.t}</div>
+        <div class="tag">${o.score}分</div>
+      </div>`;
+    });
+    card.innerHTML = `
+      <div>
+        <span class="q-num">Q${qid}</span>
+        <span class="q-text">${q.text}</span>
+      </div>
+      ${q.note ? `<div class="q-note">${q.note}</div>` : ""}
+      <div class="opt-list">${optsHtml}</div>
+    `;
+    area.appendChild(card);
+  });
+
+  // 按钮
+  document.getElementById("prev-btn").disabled = state.groupIdx === 0;
+  const nextBtn = document.getElementById("next-btn");
+  const answered = g.qIds.every(qid => state.answers[qid]);
+  nextBtn.disabled = !answered;
+  if(state.groupIdx === GROUPS.length - 1){
+    nextBtn.textContent = answered ? "✓ 生成诊断结果" : "请答完本组题目";
+  } else {
+    nextBtn.textContent = answered ? "下一组 →" : "请答完本组题目";
+  }
+  document.getElementById("quiz-counter").textContent = `第 ${state.groupIdx+1} / ${GROUPS.length} 组 · 已答 ${Object.keys(state.answers).length} / 15`;
+}
+
+function selectOpt(qid, k, score){
+  const q = QUIZ.find(x => x.qid === qid);
+  state.answers[qid] = {k, score, dim:q.dim};
+  renderGroup();
+}
+
+function nextGroup(){
+  if(state.groupIdx < GROUPS.length - 1){
+    state.groupIdx++;
+    renderGroup();
+    window.scrollTo({top:0, behavior:"smooth"});
+  } else {
+    // 完成最后一组，跳转结果
+    go("result");
+  }
+}
+
+function prevGroup(){
+  if(state.groupIdx > 0){
+    state.groupIdx--;
+    renderGroup();
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+}
+
+/* ============ 计分与结果 ============ */
+function calcScores(){
+  const dims = {cognition:0, time:0, method:0, mind:0};
+  Object.values(state.answers).forEach(a => { dims[a.dim] += a.score; });
+  return dims;
+}
+
+function dimStatus(dim, score){
+  if(dim === "mind"){
+    if(score <= 8) return {level:"red", label:"🔥 重度红灯"};
+    if(score <= 12) return {level:"yellow", label:"⚡ 中度黄灯"};
+    return {level:"green", label:"✅ 绿灯"};
+  }
+  if(score <= 4) return {level:"red", label:"🔥 重度红灯"};
+  if(score <= 6) return {level:"yellow", label:"⚡ 中度黄灯"};
+  return {level:"green", label:"✅ 绿灯"};
+}
+
+function renderResult(){
+  const scores = calcScores();
+  const dims = [
+    {key:"cognition", name:"🧭 认知扫盲", score:scores.cognition, max:9},
+    {key:"time",      name:"⏱️ 时间战场", score:scores.time, max:9},
+    {key:"method",    name:"⚔️ 方法瓶颈", score:scores.method, max:9},
+    {key:"mind",      name:"🧠 心态/方向", score:scores.mind, max:18},
+  ];
+
+  // 分数卡
+  const grid = document.getElementById("score-grid");
+  grid.innerHTML = "";
+  dims.forEach(d => {
+    const st = dimStatus(d.key, d.score);
+    const card = document.createElement("div");
+    card.className = "score-card " + st.level;
+    card.innerHTML = `
+      <div class="dim-name">${d.name}</div>
+      <div class="dim-score">${d.score}<small> / ${d.max}</small></div>
+      <div class="dim-status">${st.label}</div>
+    `;
+    grid.appendChild(card);
+  });
+
+  // 优先级提示
+  const priority = ["cognition","method","time","mind"];
+  const redDims = priority.filter(k => dimStatus(k, scores[k]).level === "red");
+  const yellowDims = priority.filter(k => dimStatus(k, scores[k]).level === "yellow");
+  let pHtml = "<b>优先级原则</b>：认知扫盲 > 方法瓶颈 > 时间战场 > 心态。先解决\"不知道规则\"，再解决\"不会做\"，最后解决\"没时间\"和\"不想做\"。";
+  if(redDims.length === 0 && yellowDims.length === 0){
+    pHtml = "<b>恭喜！</b>四个维度全是绿灯——你已在正确轨道。重点读 <b>§3 方法路由</b>（优化打法）和 <b>§9 避坑地图</b>（考前扫雷），其余章速览行动清单即可。";
+  } else if(redDims.length === 0){
+    pHtml = `没有重度红灯，但存在中度黄灯。<b>优先级原则</b>：认知扫盲 > 方法瓶颈 > 时间战场 > 心态。建议按此顺序逐个处理黄灯维度。`;
+  } else {
+    pHtml = `你的主战场：<b>${redDims.map(k=>dimName(k)).join("、")}</b>。<br>优先级原则：<b>认知扫盲 > 方法瓶颈 > 时间战场 > 心态</b>——先解决"不知道规则"，再解决"不会做"，最后解决"没时间"和"不想做"。`;
+  }
+  document.getElementById("priority-bar").innerHTML = pHtml;
+
+  // 雷达图
+  drawRadar(dims);
+
+  // 推荐路线
+  const routeKey = recommendRoute(scores);
+  const route = ROUTES.find(r => r.key === routeKey);
+  const recArea = document.getElementById("route-recommend-area");
+  let orderHtml = "";
+  route.order.forEach((o,i) => {
+    orderHtml += `<div>${i+1}. <b>${o}</b></div>`;
+  });
+  recArea.innerHTML = `
+    <div class="route-recommend">
+      <div class="label">★ 为你推荐的专属路线 ★</div>
+      <div class="name">${route.name}</div>
+      <div class="reason">${route.reason}</div>
+      <div class="order">${orderHtml}</div>
+    </div>
+  `;
+
+  // 全部路线
+  const allArea = document.getElementById("all-routes-area");
+  allArea.innerHTML = "";
+  ROUTES.forEach(r => {
+    const isRec = r.key === routeKey;
+    const card = document.createElement("div");
+    card.className = "route-card";
+    if(isRec) card.style.borderLeft = "3px solid var(--gold)";
+    let orderH = "";
+    r.order.forEach((o,i) => { orderH += `<div>${i+1}. ${o}</div>`; });
+    card.innerHTML = `
+      <div class="badge">${r.key === "A"?"🅰️":r.key==="B"?"🅱️":r.key==="C"?"🅲":r.key==="D"?"🅳":"🅴"} 路线${["一","二","三","四","五"][ROUTES.indexOf(r)]}${isRec?" ★ 推荐":""}</div>
+      <div class="name">${r.name.replace(/^[^：]+：/,'')}</div>
+      <div class="row"><span class="k">推荐理由：</span>${r.reason}</div>
+      <div class="row"><span class="k">阅读顺序：</span></div>
+      <div style="margin-left:8px;font-size:14px;color:var(--text-2);line-height:1.9">${orderH}</div>
+    `;
+    allArea.appendChild(card);
+  });
+}
+
+function dimName(k){
+  return {cognition:"🧭 认知扫盲", time:"⏱️ 时间战场", method:"⚔️ 方法瓶颈", mind:"🧠 心态/方向"}[k];
+}
+
+function recommendRoute(scores){
+  const st = {
+    cognition: dimStatus("cognition", scores.cognition).level,
+    time: dimStatus("time", scores.time).level,
+    method: dimStatus("method", scores.method).level,
+    mind: dimStatus("mind", scores.mind).level,
+  };
+  const ans = state.answers;
+
+  // 偏科优先：Q14=A 或 B
+  if(ans[14] && (ans[14].k === "A" || ans[14].k === "B")){
+    return "E";
+  }
+  // 时间战场红灯 + Q4=A（冲刺）或 Q5=A（在职）
+  if(st.time === "red" && ((ans[4] && ans[4].k === "A") || (ans[5] && ans[5].k === "A"))){
+    return "A";
+  }
+  // 完全小白：Q1=A + Q3=A
+  if(ans[1] && ans[1].k === "A" && ans[3] && ans[3].k === "A"){
+    return "C";
+  }
+  // 二战三战：Q1=C
+  if(ans[1] && ans[1].k === "C"){
+    return "D";
+  }
+  // 假性努力 + 瓶颈：方法红灯 或 认知红灯（刷了很多但分不动）
+  if(st.method === "red" || st.cognition === "red"){
+    return "B";
+  }
+  // 兜底：按优先级取第一个红灯
+  const order = ["cognition","method","time","mind"];
+  for(const k of order){
+    if(st[k] === "red" || st[k] === "yellow"){
+      // 映射到路线
+      if(k === "time") return "A";
+      if(k === "cognition") return "C";
+      if(k === "method") return "B";
+      if(k === "mind") return "D";
+    }
+  }
+  // 全绿
+  return "B";
+}
+
+/* ============ Canvas 雷达图 ============ */
+function drawRadar(dims){
+  const canvas = document.getElementById("radar-canvas");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  const cx = W/2, cy = H/2;
+  const R = Math.min(W,H)/2 - 50;
+  const N = dims.length;
+  const levels = 4;
+
+  // 背景多边形网格（板岩蓝）
+  ctx.strokeStyle = "rgba(61,90,128,0.25)";
+  ctx.lineWidth = 1;
+  for(let l=1; l<=levels; l++){
+    const r = R * l / levels;
+    ctx.beginPath();
+    for(let i=0;i<N;i++){
+      const ang = -Math.PI/2 + i * 2*Math.PI/N;
+      const x = cx + r * Math.cos(ang);
+      const y = cy + r * Math.sin(ang);
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.closePath();
+    ctx.stroke();
+  }
+  // 辐射线
+  ctx.strokeStyle = "rgba(61,90,128,0.2)";
+  for(let i=0;i<N;i++){
+    const ang = -Math.PI/2 + i * 2*Math.PI/N;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + R*Math.cos(ang), cy + R*Math.sin(ang));
+    ctx.stroke();
+  }
+
+  // 数据多边形
+  const pts = dims.map((d,i) => {
+    const ang = -Math.PI/2 + i * 2*Math.PI/N;
+    const ratio = d.score / d.max;
+    const r = R * ratio;
+    return {x: cx + r*Math.cos(ang), y: cy + r*Math.sin(ang), ang, label:d.name, score:d.score, max:d.max};
+  });
+
+  // 填充（翠绿渐变）
+  const grad = ctx.createRadialGradient(cx,cy,0,cx,cy,R);
+  grad.addColorStop(0,"rgba(15,157,118,0.40)");
+  grad.addColorStop(1,"rgba(15,157,118,0.10)");
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  pts.forEach((p,i) => { if(i===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y); });
+  ctx.closePath();
+  ctx.fill();
+
+  // 描边
+  ctx.strokeStyle = "#0f9d76";
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  pts.forEach((p,i) => { if(i===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y); });
+  ctx.closePath();
+  ctx.stroke();
+
+  // 数据点
+  pts.forEach((p,i) => {
+    const st = dimStatus(dims[i].key, dims[i].score);
+    const colorMap = {red:"#c0392b", yellow:"#d39e00", green:"#0f9d76"};
+    ctx.fillStyle = colorMap[st.level];
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 6, 0, 2*Math.PI);
+    ctx.fill();
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  });
+
+  // 维度标签（浅底下用深色文字）
+  ctx.fillStyle = "#16263a";
+  ctx.font = "600 13px -apple-system,sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  pts.forEach((p,i) => {
+    const ang = p.ang;
+    const labelR = R + 28;
+    const lx = cx + labelR * Math.cos(ang);
+    const ly = cy + labelR * Math.sin(ang);
+    ctx.fillStyle = "#1e3a52";
+    ctx.fillText(dims[i].name, lx, ly - 8);
+    ctx.fillStyle = "#46586d";
+    ctx.font = "400 12px -apple-system,sans-serif";
+    ctx.fillText(dims[i].score + " / " + dims[i].max, lx, ly + 8);
+    ctx.font = "600 13px -apple-system,sans-serif";
+  });
+}
+
+/* ============ 行动清单 toggle ============ */
+function toggleCheck(li){
+  li.classList.toggle("checked");
+}
+
+/* ============ 重置 ============ */
+function resetQuiz(){
+  if(!confirm("确定要重新开始诊断吗？当前所有答案将被清空。")) return;
+  state.groupIdx = 0;
+  state.answers = {};
+  go("intro");
+}
+
+/* ============ 初始化 ============ */
+// 顶部按钮初始
+document.getElementById("nav-intro").classList.add("active");
+</script>
+
+</body>
+</html>
