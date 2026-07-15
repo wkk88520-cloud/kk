@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公考备考自测诊断</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .progress-bar {
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            height: 8px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: white;
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        .progress-text {
+            font-size: 12px;
+            margin-top: 8px;
+            opacity: 0.9;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .question-group {
+            margin-bottom: 30px;
+        }
+        .group-title {
+            font-size: 16px;
+            color: #4a90d9;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-left: 12px;
+            border-left: 4px solid #4a90d9;
+        }
+        .question {
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #eee;
+        }
+        .question:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .question-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #222;
+        }
+        .question-q {
+            color: #4a90d9;
+            font-weight: 600;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option:hover {
+            background: #e8f0f8;
+        }
+        .option.selected {
+            background: #e8f0f8;
+            border-color: #4a90d9;
+        }
+        .option input {
+            display: none;
+        }
+        .option-marker {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            margin-right: 12px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #999;
+            transition: all 0.2s;
+        }
+        .option.selected .option-marker {
+            background: #4a90d9;
+            border-color: #4a90d9;
+            color: white;
+        }
+        .option-text {
+            font-size: 14px;
+            color: #555;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .btn {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-prev {
+            background: #f0f0f0;
+            color: #666;
+        }
+        .btn-prev:hover {
+            background: #e0e0e0;
+        }
+        .btn-next {
+            background: #667eea;
+            color: white;
+        }
+        .btn-next:hover {
+            background: #5a71d4;
+        }
+        .btn-next:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .btn-submit {
+            background: #52c41a;
+        }
+        .btn-submit:hover {
+            background: #3d9a0d;
+        }
+        /* 结果页面 */
+        .result-header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 16px;
+            margin-bottom: 30px;
+        }
+        .result-header h2 {
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+        .result-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .radar-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .radar-chart {
+            width: 460px;
+            height: 360px;
+        }
+        .dimension-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 600px) {
+            .dimension-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+        .dim-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .dim-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .dim-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        .dim-card-score {
+            font-size: 20px;
+            font-weight: 700;
+            color: #4a90d9;
+        }
+        .dim-card-bar {
+            height: 6px;
+            background: #f0f0f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .dim-card-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.8s ease;
+        }
+        .dim-card-status {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        .status-red {
+            background: #fff1f0;
+            color: #cf1322;
+        }
+        .status-yellow {
+            background: #fffbe6;
+            color: #d48806;
+        }
+        .status-green {
+            background: #f6ffed;
+            color: #52c41a;
+        }
+        .detail-section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .detail-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+        }
+        .detail-title::before {
+            content: '';
+            width: 4px;
+            height: 18px;
+            background: #4a90d9;
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+        .detail-item {
+            padding: 14px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        .detail-item-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #222;
+            margin-bottom: 6px;
+        }
+        .detail-item-content {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.7;
+        }
+        .restart-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: #4a90d9;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .restart-btn:hover {
+            background: #357abd;
+        }
+        .hidden {
+            display: none;
+        }
+        .answer-review {
+            margin-top: 30px;
+        }
+        .review-question {
+            margin-bottom: 20px;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .review-question-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        .review-answer {
+            font-size: 13px;
+            color: #4a90d9;
+            font-weight: 500;
+        }
+        /* 详细诊断样式 */
+        .diagnosis-section {
+            margin-bottom: 20px;
+        }
+        .diagnosis-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .diagnosis-content {
+            font-size: 14px;
+            color: #5a5a7a;
+            line-height: 1.8;
+            padding-left: 0;
+        }
+        .diagnosis-content.reminder {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+            padding: 14px 16px;
+            border-radius: 10px;
+            border-left: none;
+        }
+        .diagnosis-table {
+            margin-top: 12px;
+            overflow-x: auto;
+        }
+        .diagnosis-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .diagnosis-table th {
+            background: #f8f9fa;
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e8e8e8;
+        }
+        .diagnosis-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #555;
+            line-height: 1.6;
+        }
+        .diagnosis-table .chapter-cell {
+            color: #667eea;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .diagnosis-table tr:last-child td {
+            border-bottom: none;
+        }
+        /* 总结卡片样式 */
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 24px;
+            color: white;
+            margin-bottom: 16px;
+        }
+        .summary-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .summary-subtitle {
+            font-size: 13px;
+            opacity: 0.85;
+            margin-bottom: 16px;
+        }
+        .priority-group {
+            margin-bottom: 12px;
+        }
+        .priority-group:last-child {
+            margin-bottom: 0;
+        }
+        .priority-label {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .priority-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .priority-tag {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .rules-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            margin-bottom: 16px;
+        }
+        .rules-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 14px;
+        }
+        .rules-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .rule-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .rule-dim {
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+        .rule-scores {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .score-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .all-good {
+            background: linear-gradient(135deg, rgba(82, 196, 26, 0.1) 0%, rgba(82, 196, 26, 0.05) 100%);
+            border: 1px solid rgba(82, 196, 26, 0.2);
+            border-radius: 12px;
+            padding: 16px 20px;
+            text-align: center;
+            color: #52c41a;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        /* 优先级排序新样式 */
+        .priority-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 20px 24px;
+            color: white;
+            margin-bottom: 20px;
+        }
+        .priority-header-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .priority-header-subtitle {
+            font-size: 13px;
+            opacity: 0.85;
+        }
+        .priority-section {
+            margin-bottom: 16px;
+        }
+        .chapter-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .chapter-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .chapter-dim-name {
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .chapter-dim-badge {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+        .chapter-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .chapter-item {
+            padding: 12px 14px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .chapter-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 4px;
+        }
+        .chapter-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+        .green-section {
+            background: linear-gradient(135deg, rgba(82, 196, 26, 0.08) 0%, rgba(82, 196, 26, 0.03) 100%);
+            border: 1px solid rgba(82, 196, 26, 0.15);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+        }
+        .green-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #52c41a;
+            margin-bottom: 10px;
+        }
+        .green-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .green-tag {
+            background: rgba(82, 196, 26, 0.1);
+            color: #52c41a;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 开始页面 -->
+        <div id="startPage" class="card" style="padding: 0; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 8px;"></div>
+            <div style="text-align: center; padding: 50px 32px 40px;">
+                <div style="width: 72px; height: 72px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 20px; margin: 0 auto 28px; display: flex; align-items: center; justify-content: center;">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                </div>
+                <h2 style="font-size: 26px; margin-bottom: 10px; color: #1a1a2e; font-weight: 600;">公考备考自测诊断</h2>
+                <p style="color: #667eea; font-size: 14px; font-weight: 500; margin-bottom: 28px;">15道题 · 定位真正的卡点</p>
+                
+                <p style="color: #5a5a7a; font-size: 15px; margin-bottom: 36px; line-height: 1.8;">
+                    你可能刚下定决心要考公<br>也可能已经刷了上百套题但分数就是不动<br>来测一测目前的卡点吧
+                </p>
+                
+                <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 32px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span style="color: #999; font-size: 13px;">预计用时 5 分钟</span>
+                </div>
+                
+                <button class="btn btn-next" style="max-width: 180px; padding: 14px 32px; font-size: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 25px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.35);" onclick="startTest()">开始测试</button>
+                
+                <p style="color: #c8c8d8; font-size: 12px; margin-top: 20px;">完全匿名 · 立即查看结果</p>
+            </div>
+        </div>
+
+        <!-- 测试页面 -->
+        <div id="testPage" class="hidden">
+            <div class="header">
+                <h1>公考备考自测诊断</h1>
+                <p>15道题，定位你真正的卡点</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p class="progress-text" id="progressText">第 1/15 题</p>
+            </div>
+
+            <div class="card">
+                <div class="group-title" id="groupTitle">🧭 认知扫盲维度（3题）</div>
+                <div id="questionContainer"></div>
+
+                <div class="btn-group">
+                    <button class="btn btn-prev" id="prevBtn" onclick="prevQuestion()">上一题</button>
+                    <button class="btn btn-next" id="nextBtn" onclick="nextQuestion()">下一题</button>
+                    <button class="btn btn-submit hidden" id="submitBtn" onclick="submitTest()">查看结果</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 结果页面 -->
+        <div id="resultPage" class="hidden">
+            <div class="result-header">
+                <h2>你的备考诊断报告</h2>
+                <p>根据你的答题情况生成了专属分析</p>
+            </div>
+
+            <div class="card">
+                <div class="radar-container">
+                    <canvas id="radarChart" class="radar-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="dimension-cards" id="dimensionCards"></div>
+
+            <div class="detail-section">
+                <div class="detail-title">各维度详细分析</div>
+                <div id="detailContent"></div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-title">重点改进建议</div>
+                <div id="suggestionsContent"></div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-title">答题回顾</div>
+                <div id="answerReview" class="answer-review"></div>
+            </div>
+
+            <button class="restart-btn" onclick="restartTest()">重新测试</button>
+        </div>
+    </div>
+
+    <script>
+        // ========== 题目配置（可方便修改） ==========
+        const QUESTIONS = [
+            // 第一组：认知扫盲维度（Q1-Q3）
+            {
+                group: 0,
+                groupName: "🧭 认知扫盲维度",
+                q: "Q1",
+                title: "你目前的状态是？",
+                options: [
+                    { label: "A", text: "在校大三大四，时间有，但完全不知道从哪下手", score: 1 },
+                    { label: "B", text: "一边上班一边备考，每天能挤出的有效时间不到 3 小时", score: 2 },
+                    { label: "C", text: "已经考过至少一次，这次是二战或三战", score: 3 },
+                    { label: "D", text: "刚毕业或待业中，可以全职备考但有经济压力", score: 1 }
+                ]
+            },
+            {
+                group: 0,
+                q: "Q2",
+                title: "你知道行测五个模块，投入同样的100小时——哪个提分最多、哪个基本打了水漂吗？",
+                options: [
+                    { label: "A", text: "完全没概念。我每个模块平均分配时间，觉得都差不多重要", score: 1 },
+                    { label: "B", text: "大概知道资料分析重要、常识不太值，但具体每个模块的投入产出数据说不清楚", score: 2 },
+                    { label: "C", text: "清楚知道性价比排名，并且已经在按优先级分配每天的时间", score: 3 }
+                ]
+            },
+            {
+                group: 0,
+                q: "Q3",
+                title: "你手里现在有多少备考资料/课程？",
+                options: [
+                    { label: "A", text: "还没开始买，不知道买什么、看哪个老师", score: 1 },
+                    { label: "B", text: "网盘里存了几十 G，关注了七八个老师的课，但大部分没打开过", score: 2 },
+                    { label: "C", text: "只留了核心几样——真题、一本系统讲义、一门课，够用", score: 3 }
+                ]
+            },
+            // 第二组：时间战场维度（Q4-Q6）
+            {
+                group: 1,
+                groupName: "⏱️ 时间战场维度",
+                q: "Q4",
+                title: "离你计划参加的最近一次考试，还有多久？",
+                options: [
+                    { label: "A", text: "不到 2 个月——冲刺了", score: 1 },
+                    { label: "B", text: "2-6 个月——拔高期", score: 2 },
+                    { label: "C", text: "6 个月以上——长线作战", score: 3 }
+                ]
+            },
+            {
+                group: 1,
+                q: "Q5",
+                title: "你每天能保证的\u201C有效学习时间\u201D大概多少？（有效学习 = 脑子真的在动）",
+                options: [
+                    { label: "A", text: "3 小时以内，下班后就剩一口气", score: 1 },
+                    { label: "B", text: "3-6 小时，还算正常", score: 2 },
+                    { label: "C", text: "6 小时以上，可以全天投入", score: 3 }
+                ]
+            },
+            {
+                group: 1,
+                q: "Q6",
+                title: "你做套卷时会严格计时吗（包括涂答题卡）？",
+                options: [
+                    { label: "A", text: "从来没计过时，不限量不限速慢慢做", score: 1 },
+                    { label: "B", text: "偶尔计时，但不严格，也没练过涂卡", score: 2 },
+                    { label: "C", text: "每套都按考试时间严格掐表，涂卡也当考试练", score: 3 }
+                ]
+            },
+            // 第三组：方法瓶颈维度（Q7-Q9）
+            {
+                group: 2,
+                groupName: "⚔️ 方法瓶颈维度",
+                q: "Q7",
+                title: "做完一套行测，你花在复盘上的时间，大概是做题时间的多少？",
+                options: [
+                    { label: "A", text: "做完对个答案、扫眼解析就翻篇了——10% 都不到", score: 1 },
+                    { label: "B", text: "错题会认真看解析，但很少合上答案自己重做一遍", score: 2 },
+                    { label: "C", text: "每道错题都追问原因，同类错题放一起比对，复盘时间至少是做题的一半", score: 3 }
+                ]
+            },
+            {
+                group: 2,
+                q: "Q8",
+                title: "你做行测时有固定的做题顺序和每个模块的时间上限吗？",
+                options: [
+                    { label: "A", text: "没有，从第一题顺着往下做，做到哪算哪", score: 1 },
+                    { label: "B", text: "有大致顺序，但没严格掐表，经常在某个模块超时", score: 2 },
+                    { label: "C", text: "有固定顺序，每个模块掐死时间，到点就跳", score: 3 }
+                ]
+            },
+            {
+                group: 2,
+                q: "Q9",
+                title: "资料分析这个模块——行测性价比之王——你的状态是？",
+                options: [
+                    { label: "A", text: "错得不多但做得太慢，一套资料分析能耗掉将近 40 分钟", score: 1 },
+                    { label: "B", text: "公式都懂，但经常看错数、抄错数，每次都归结为\u201C粗心\u201D", score: 2 },
+                    { label: "C", text: "速度和正确率都在线，是稳定拿分的底盘", score: 3 }
+                ]
+            },
+            // 第四组：心态/方向维度（Q10-Q15）
+            {
+                group: 3,
+                groupName: "🧠 心态/方向维度",
+                q: "Q10",
+                title: "关于申论大作文，以下哪句最像你？",
+                options: [
+                    { label: "A", text: "一篇完整的都还没写过，总想等\u201C积累够了再动笔\u201D", score: 1 },
+                    { label: "B", text: "写了，但每篇都像在套模板，分数稳定在中低档", score: 2 },
+                    { label: "C", text: "能稳定输出，但在立意深度和论证厚度上还有瓶颈", score: 3 }
+                ]
+            },
+            {
+                group: 3,
+                q: "Q11",
+                title: "写申论小题时，你怎么处理材料里的原词？",
+                options: [
+                    { label: "A", text: "尽量用自己的话转述，觉得直接抄材料会显得没水平", score: 1 },
+                    { label: "B", text: "会抄一些材料原词，但不放心，又加了自己背的规范词混着用", score: 2 },
+                    { label: "C", text: "主要用材料原词，只在需要概括提炼时才用自己的话", score: 3 }
+                ]
+            },
+            {
+                group: 3,
+                q: "Q12",
+                title: "你备考时最容易出现哪种情况？",
+                options: [
+                    { label: "A", text: "计划列得完美，执行三天就崩，然后推翻重来——循环往复", score: 1 },
+                    { label: "B", text: "听课听得停不下来，笔记记得满满当当，但打开题本就不会做", score: 2 },
+                    { label: "C", text: "模考分数一掉就慌，开始怀疑\u201C我是不是考不上了\u201D", score: 1 },
+                    { label: "D", text: "学不进去就刷手机，一条短视频接一条，回过神来半小时没了", score: 1 }
+                ]
+            },
+            {
+                group: 3,
+                q: "Q13",
+                title: "你把题做错时，通常怎么写错因？",
+                options: [
+                    { label: "A", text: "\u201C粗心了\u201D\u201C状态不好\u201D\u201C运气差\u201D\u201C这题太偏了\u201D", score: 1 },
+                    { label: "B", text: "能说出是哪个知识点不会，但分析到这就停了", score: 2 },
+                    { label: "C", text: "能追溯到做题时的具体操作失误——比如\u201C没在材料里打草稿，凭脑子记结果抄错行\u201D", score: 3 }
+                ]
+            },
+            {
+                group: 3,
+                q: "Q14",
+                title: "行测和申论的时间分配，你目前是什么样的？",
+                options: [
+                    { label: "A", text: "大部分时间都给了行测，申论基本没怎么动", score: 1 },
+                    { label: "B", text: "两个都在学，但申论总有一种\u201C学得很虚、不知道学到了啥\u201D的感觉", score: 2 },
+                    { label: "C", text: "两边都有稳定的节奏，分数也大致能匹配", score: 3 }
+                ]
+            },
+            {
+                group: 3,
+                q: "Q15",
+                title: "回顾最近一周的备考——抛开分数——你能具体说出\u201C我到底学会了什么\u201D吗？",
+                options: [
+                    { label: "A", text: "说不上来。感觉每天都在学，但问学了啥——脑子里空的", score: 1 },
+                    { label: "B", text: "能大概说出学了哪个模块、听了什么课，但不够具体", score: 2 },
+                    { label: "C", text: "能说清楚：资料分析的增长贡献率题型从不会到会了；定义判断正确率从六成提到了八成", score: 3 }
+                ]
+            }
+        ];
+
+        const DIMENSIONS = [
+            {
+                name: "认知扫盲",
+                key: "cognition",
+                icon: "🧭",
+                questions: [0, 1, 2],
+                maxScore: 9,
+                description: "你对考公全流程、选岗策略、备考资料的理解程度",
+                diagnosis: {
+                    low: {
+                        label: "重度红灯",
+                        emoji: "🔥",
+                        range: "3-4分",
+                        situation: "你根本不知道行测五个模块的投入产出比——投入同样的100小时，有些模块能让你多对10道题，有些只能多对2道。而你现在很可能正在做最亏的事：每个模块平均分配时间，\"什么都学一点\"。如果你是在常识判断上花精力和资料分析一样多——那你就是在一小时只赚2分的项目上，和一小时能赚10分的项目上，花了同样的钱。这笔账任何一个会算账的人都知道有多亏。再加上你的网盘里存了几十G资料、关注了七八个老师——大部分从没打开过，打开了的也只学了皮毛。下载的那一刻你觉得安心了——但下载≠学会，收藏≠掌握。",
+                        danger: "没有性价比认知的人，备考第一件事一定是\"把时间均匀撒在所有模块上\"——然后三个月后第一次认真模考，发现分数和裸考差不多。因为你根本不知道：资料分析从60%提到80%只要2-4周，而常识从30%提到50%要积累一整年。更致命的是，如果你是在职党每天只有2-3小时——你还敢平均分配吗？你每在低回报模块上浪费一小时，就是从高回报模块上抢走了一小时。在职备考的第一原则：宁可两块85%，不要五块65%。",
+                        consequence: "你会在前三个月把精力均匀撒出去，然后发现自己\"什么都学了，什么都没学透\"。资料分析没稳到80%，言语理解还在凭语感，数量关系全蒙，常识积累了一整本笔记但正确率还是40%。三个月后模考一次——60分。那一刻你才会意识到，不是你不努力，是你从一开始就没搞清楚\"什么值得努力\"。而你的应届生身份正在倒计时。",
+                        suggestions: [
+                            { chapter: "§2 模块取舍（全章）", desc: "五大模块性价比排名+正确率天花板+提分时间估算+三套取舍方案——看完你会知道你过去浪费了多少时间" },
+                            { chapter: "§1 假性努力 §1.1", desc: "形态六「贪多嚼不烂」+ 形态十「学习脑冒充考试脑」——你现在的核心问题是做减法，不是做加法" },
+                            { chapter: "§4 时间规划 §4.2", desc: "四阶段通用框架——基础期/拔高期/瓶颈期/冲刺期，每个阶段该干什么，不该干什么" },
+                            { chapter: "§3 方法路由", desc: "不是缺方法，是缺一张\"这个阶段该用什么方法\"的地图——方法用错阶段，好方法也拖后腿" }
+                        ]
+                    },
+                    mid: {
+                        label: "中度黄灯",
+                        emoji: "⚡",
+                        range: "5-6分",
+                        situation: "你对性价比有大致方向——你知道资料分析是性价比之王、知道常识不值得主力时间。但问你\"资料从80%提到85%和数量从20%提到40%，哪个更划算？\"你说不出来。问你\"你现在是拔高期还是瓶颈期？这两个阶段训练方式完全不一样你知道吗？\"你也不确定。你脑子里的那张地图是\"标清\"而不是\"高清\"——大致方向对，但关键路口你会犹豫。而且你可能同时在跟三四个老师——言语听A，判断听B，数量听C——以为在博采众长。实际上每个老师的方法体系都没学透，做题时多种思路在脑子里打架，最后凭感觉选。",
+                        danger: "模糊的性价比认知最危险的地方在于——它会让你在备考中期做出错误的精力分配决策。你可能在一个模块85%以后还在死磕，而旁边一个只有20%正确率的模块等着你去捡分。资料分析从85%到90%需要的精力，大概率够你把数量从20%提到40%了。前者只多拿约1分，后者多拿约5-8分。你不知道这个数据——所以你大概率会在前者上死磕，把后者晾着。方法贪多的问题同样隐蔽——你觉得自己\"博采众长\"，实际上三个老师三套体系在你脑子里不是融合，是互斥。",
+                        consequence: "你会进入一个经典的备考困境——不是不努力，是努力投错了方向。在一个模块上死磕到天花板（边际递减），同时忽视了其他还能大幅提分的模块。考场上你资料分析对了18/20，但数量全蒙、常识乱选——总分还是70不到。而那个和你同样努力的对手，因为他读过了模块性价比数据，把死磕资料的时间分了一半给数量基础题——总分75。",
+                        suggestions: [
+                            { chapter: "§2 模块取舍（全章）", desc: "每个模块的精确性价比数据+三套取舍方案+各分数段正确率配置表——模糊认知的终结者" },
+                            { chapter: "§3 方法路由 §3.1-§3.2", desc: "三个真相纠正+核心路由表——按人群+阶段精准匹配方法组合，别再同时用三套互斥的方法" },
+                            { chapter: "§1 假性努力 §1.1 形态六", desc: "贪多嚼不烂的纠正方案：资料只留核心三样，一个模块只跟一位老师，练到本能再换" },
+                            { chapter: "§4 时间规划 §4.4", desc: "从\"模糊的方向感\"切换到量化的阶段检验标准——基础期/拔高期/瓶颈期各有各的及格线" }
+                        ]
+                    },
+                    high: {
+                        label: "绿灯",
+                        emoji: "✅",
+                        range: "7-9分",
+                        situation: "你对行测的性价比结构有清晰的认知——你知道资料分析是唯一可以接近满分的模块（天花板90-95%），知道判断推理的四个子模块可以逐个击破，知道数量关系不是\"全放弃\"而是\"半做半猜\"，知道常识判断是投入产出比最低的黑洞（100小时多对2道）。你的精力分配是按优先级走的：资料→判断→言语→数量→常识。你手里的资料精简到核心几样——真题+系统讲义+一位老师的课。这个维度你目前OK。",
+                        reminder: "认知扫盲过关，代表你不是在错误的方向上奔跑。但这只解决了\"学什么\"的问题——还没解决\"怎么学\"和\"怎么坚持\"。接下来真正的考验在方法瓶颈和时间战场两个维度。想确认的话，翻一下 §2 模块取舍中各分数段正确率配置表，看看你的目标分数拆到每个模块分别需要多少正确率——5分钟就够了。"
+                    }
+                }
+            },
+            {
+                name: "时间战场",
+                key: "time",
+                icon: "⏱️",
+                questions: [3, 4, 5],
+                maxScore: 9,
+                description: "你的备考时间规划和执行力",
+                diagnosis: {
+                    low: {
+                        label: "重度红灯",
+                        emoji: "🔥",
+                        range: "3-4分",
+                        situation: "你的时间管理已经亮起红灯——可能考试不到两个月了你还在按长线备考的节奏慢慢学，或者每天有效学习时间不足3小时但计划是按全职备考定的。最要命的是：你做题从来不严格计时。不限量不限速慢慢做的正确率——是假数据。考场上每道题你只有不到一分钟，而你平时一道资料分析做4分钟才能做对。",
+                        danger: "你可能还在列\"精确到分钟\"的完美计划——9:00-10:30资料分析，10:30-11:00言语理解。这种计划有一个致命假设：你的状态是恒定的、外部干扰不存在。这个假设从第一分钟就是错的。结果你执行三天就崩，崩了就推翻重来——计划列了十版，没有一版执行超过一周。每一次循环消耗的不是时间，是自我效能感。",
+                        consequence: "考前一个月你会突然发现——限时模考的正确率比你想象的低了15个百分点。数量关系永远没时间做，资料分析最后三道永远是蒙的。而这些问题本来可以在三个月前通过严格计时训练解决。",
+                        suggestions: [
+                            { chapter: "§2 模块取舍 §2.2", desc: "三套取舍方案——在职党的精要主义、冲刺党的断舍离，找到你的那套" },
+                            { chapter: "§4 时间规划（全章）", desc: "四阶段框架 + 三份作息模板 + \"崩了也能继续\"的计划方法" },
+                            { chapter: "§5 行测 §5.6 通用困局一", desc: "固定做题顺序 + 模块掐死时间 + 1分钟断舍离——考场生存法则" },
+                            { chapter: "§1 假性努力 §1.1 形态七/八", desc: "打破\"计划→崩→重来\"的死循环 + 注意力碎片化的环境改造" }
+                        ]
+                    },
+                    mid: {
+                        label: "中度黄灯",
+                        emoji: "⚡",
+                        range: "5-6分",
+                        situation: "你的时间利用不算差，但效率的天花板正在逼近。你每天能保证一定学习时间，偶尔计时，但没有形成铁律。你最大的隐患是——计时训练不够严格，有时候计了有时候\"这套先不计了练练手\"。你不知道的是：考场上的大脑在时间压力下和在舒适状态是完全两种工作模式。",
+                        danger: "你可能已经体验过——模考做到资料分析第三篇，一看时间过了25分钟，手心出汗，后面的题越做越快、越做越错。这不是你\"紧张\"，是你从来没有在时间压力下训练过\"秒级决策\"——这道题值不值得做、做多久该放弃。这个能力不靠训练长不出来。",
+                        consequence: "你会停在一个尴尬的位置——正确率够了但速度上不去，速度上去了正确率又崩。直到考前，你的考场发挥永远比模考低5-8分。",
+                        suggestions: [
+                            { chapter: "§4 时间规划 §4.4", desc: "做计划的正确姿势——把精确到分钟的时间表换成任务块" },
+                            { chapter: "§5 行测 §5.6 通用困局一", desc: "固定做题顺序、每个模块掐死时间、超时就跳——练到肌肉记忆" },
+                            { chapter: "§2 模块取舍", desc: "搞清楚你的备考阶段，确认时间分配比例是否匹配" },
+                            { chapter: "§1 假性努力 §1.1 形态八", desc: "注意力碎片化——手机物理隔离 + 番茄钟25+5" }
+                        ]
+                    },
+                    high: {
+                        label: "绿灯",
+                        emoji: "✅",
+                        range: "7-9分",
+                        situation: "你的时间规划和执行力基本在线。你严格计时、会涂答题卡、有固定做题节奏。这个维度你目前OK。",
+                        reminder: "时间战场过关，说明你的执行系统是好的。但执行系统再有纪律，输入的东西不对——刷了一百套题但复盘不到位——那你就是在高效率地做低效率的事。这个维度不需要重读，5分钟速览 §4 行动清单即可。"
+                    }
+                }
+            },
+            {
+                name: "方法瓶颈",
+                key: "method",
+                icon: "⚔️",
+                questions: [6, 7, 8],
+                maxScore: 9,
+                description: "行测各模块的解题方法和复盘习惯",
+                diagnosis: {
+                    low: {
+                        label: "重度红灯",
+                        emoji: "🔥",
+                        range: "3-4分",
+                        situation: "你的解题方法存在严重问题——可能还在靠\"语感\"做言语、靠\"感觉\"做判断，或者根本不知道资料分析有固定题型套路。做完题对个答案就完事，错题看一遍解析就翻篇，从不复盘自己为什么会错。更可怕的是，你可能花了大量时间听课——听了就觉得会了，但一做题就傻眼。",
+                        danger: "方法错误最大的问题是：你在用低效的方式消耗时间，却以为自己很努力。资料分析还在老老实实硬算，而不是用秒杀技巧；判断推理还在一个个排除，而不是直接找逻辑链；数量关系还在放弃，而不是学会挑题。你的备考时间正在被低效方法大量吞噬。",
+                        consequence: "你会进入一个怪圈——越努力越没效果。听课听得热血沸腾，做题做得怀疑人生。模考分数原地踏步，心态逐渐崩溃。而那些找到了正确方法的人，正在用你一半的时间，超过你两个台阶。",
+                        suggestions: [
+                            { chapter: "§5 行测（全章）", desc: "各模块秒杀技巧+题型识别方法+正确率配置表" },
+                            { chapter: "§3 方法路由 §3.3", desc: "复盘正确姿势——错题不是用来\"看懂\"的，是用来\"重做\"的" },
+                            { chapter: "§1 假性努力 §1.1 形态二", desc: "\"听课脑\"的陷阱——看会≠做对，做对≠做快" },
+                            { chapter: "§5 行测 §5.3 资料分析", desc: "资料分析满分攻略：不是算，是找——找数据、找关系、找陷阱" }
+                        ]
+                    },
+                    mid: {
+                        label: "中度黄灯",
+                        emoji: "⚡",
+                        range: "5-6分",
+                        situation: "你有一定的方法基础，但还没形成体系。知道复盘重要，但复盘深度不够；知道有秒杀技巧，但只在少数题目上能用；做题顺序大致固定，但还没优化到最优。你的方法库是\"散装\"的——能用，但不能稳定输出。",
+                        danger: "散装方法的危险在于——考试压力下，你的方法会失灵。平常做对的题目，考试环境下就做不对；简单题能做对，难题就卡壳；单个模块正确率还行，套卷做下来就崩。这是因为你的方法还没有训练到\"本能反应\"的程度。",
+                        consequence: "你会在某个分数段遇到瓶颈——比如长期卡在65-70分，怎么也上不去。不是因为你不够努力，而是你的方法已经到了天花板，需要升级。需要把\"会做\"升级到\"秒做\"，把\"能做对\"升级到\"考试环境下也能做对\"。",
+                        suggestions: [
+                            { chapter: "§5 行测 全章", desc: "各模块方法升级：从\"会做\"到\"秒做\"" },
+                            { chapter: "§3 方法路由 §3.3", desc: "深度复盘方法：同类错题比对+错因追溯到操作层" },
+                            { chapter: "§5 行测 §5.6 通用困局二", desc: "套卷训练法：在模拟考试压力下使用方法，训练抗压能力" },
+                            { chapter: "§4 时间规划 §4.5", desc: "正确率与速度的平衡：不是非此即彼，而是动态博弈" }
+                        ]
+                    },
+                    high: {
+                        label: "绿灯",
+                        emoji: "✅",
+                        range: "7-9分",
+                        situation: "你的解题方法已经形成体系——各模块有固定的解题套路，复盘有深度，套卷训练有节奏。你的方法不是散装的，而是成体系的。这个维度你目前OK。",
+                        reminder: "方法瓶颈过关，说明你的\"武器库\"是完整的。但武器库完整不等于战场胜利。接下来的挑战在于：如何在考试压力下稳定输出？如何处理那些\"知道方法但做不对\"的题目？5分钟翻一下 §5 行测的考场心态调整部分，会有收获。"
+                    }
+                }
+            },
+            {
+                name: "心态/方向",
+                key: "mindset",
+                icon: "🧠",
+                questions: [9, 10, 11, 12, 13, 14],
+                maxScore: 18,
+                description: "备考心态、习惯和自我认知",
+                diagnosis: {
+                    low: {
+                        label: "重度红灯",
+                        emoji: "🔥",
+                        range: "6-8分",
+                        situation: "你的备考方向存在系统性偏差，心态已亮红灯。三个致命信号：\n\n第一，你大概率从没完整动笔写过申论大作文。金句背了、范文读了、规范词抄了——但一道完整的大作文没写过。每次想动笔，脑子里就有一个声音说\"等我多积累一点再开始\"——然后永远在积累，永远没有开始。从\"见\"到\"写\"隔着一整个太平洋，你一直在岸边练游泳动作，从没下过水。\n\n第二，你的注意力已被碎片化。坐在书桌前，题摊开着，但脑子要么在刷手机，要么在想\"我能不能考上\"。有效两小时被稀释成六小时坐班。\n\n第三，你说不出\"我到底学会了什么\"。回顾最近一周——感觉每天都在学，但问学了啥，脑子空的。\n\n更致命的是：你可能正在经历\"计划列了就崩、崩了就推翻重来\"的死循环。每一次循环消耗的不是时间——是自我效能感。列计划时踌躇满志，崩盘时自我否定，能量全耗在\"想做但做不到\"的拉扯上。还有——你把行测八成时间砸下去，申论基本没动。行测从70提到75（提5分）的难度，远大于申论从50提到65（提15分）。你可能正在用最累的方式，拉低自己的总分上限。",
+                        danger: "最坏的结果不是今年考不上——是你会在\"假努力→自我否定→更不敢直面薄弱环节→继续假努力\"里越陷越深。把失败归结为\"我不够聪明\"\"考公太难了\"，而不是\"我的方向和心态从根上就偏了\"。然后带着同样的模式进入二战、三战——每年都在重演同一个剧本。",
+                        consequence: "这些隐患在备考后期集中爆发时，你已经没有时间做方向级的调整了。申论从50提到65需要的是方法转换和持续动笔——不是考前背几篇范文能解决的。归因停在表面，意味着你会在瓶颈期反复犯同样的错但不知道原因——直到信心耗尽。",
+                        suggestions: [
+                            { chapter: "§6 申论（全章）", desc: "§6.1 先换脑子再动笔 + ABC分层法 + 三遍做题法 + 25句大作文法——今天就读，读完立刻动笔" },
+                            { chapter: "§8 心态（全章）", desc: "每个阶段的心理崩塌都有对应急救方案——先翻到你当前阶段的那一节" },
+                            { chapter: "§1 假性努力", desc: "形态三「只背不动笔」+ 形态七「备考拖延症」+ 形态八「注意力碎片化」——你很可能三条全中" },
+                            { chapter: "§2 模块取舍 §2.3", desc: "行测和申论精力分配纠正——别一条腿走路，申论提分空间远大于行测" }
+                        ]
+                    },
+                    mid: {
+                        label: "中度黄灯",
+                        emoji: "⚡",
+                        range: "9-12分",
+                        situation: "你的心态和方向不算太差，但有隐患正在悄悄生长。\n\n申论方面：你能写但分数稳在中低档——大作文像在套模板，格式正确但阅卷人一眼看出是\"流水线产品\"。小题方面，你可能自作聪明地用自己的话转述材料原词——觉得直接抄显得没水平——结果把得分点丢了。申论阅卷人想看的是你从材料里抠出了什么，不是你自己发挥了什么。\n\n心态方面：你的错因分析停在表面。\"粗心了\"\"状态不好\"\"运气差\"——这三个词在错题本上反复出现。你写的不是错因分析，是自我安慰。真正的归因必须是具体的、可操作的——\"资料第三篇第2题，因为没用笔指着数据行，从第3行抄到了第4行\"。问不到这个颗粒度，那每次写的错因都只是一句心理按摩。",
+                        danger: "你可能正在经历\"模考分数一掉就慌\"的过山车。一次模考低了5分就开始怀疑\"我是不是考不上了\"，然后刷更多题想证明自己——结果越刷越差。你把模考当成了审判而不是诊断。申论方面的隐患更容易被忽视——因为申论提分慢、反馈模糊，你可能会下意识地把时间继续往行测倾斜——然后总分永远被申论那条短腿拖死。行测75申论55，总分130——而隔壁行测70申论70的对手，总分140。",
+                        consequence: "这些隐患在备考后期集中爆发时，你已经没有时间做方向级的调整了。申论从50提到65需要的是方法转换和持续动笔——不是考前背几篇范文能解决的。归因停在表面，意味着你会在瓶颈期反复犯同样的错但不知道原因——直到信心耗尽。",
+                        suggestions: [
+                            { chapter: "§6 申论 §6.2-§6.4", desc: "ABC分层法 + 三遍做题法 + 25句拆解大作文法——从\"套模板\"升级到\"真手艺\"" },
+                            { chapter: "§8 心态 §8.2-§8.3", desc: "拔高期\"分数没动≠没进步\" + 倦怠期急救方案" },
+                            { chapter: "§1 假性努力 §1.3 深度纠偏二/三", desc: "假性学会和感动自己式刷题的深度纠正" },
+                            { chapter: "§5 行测 §5.1", desc: "资料分析——把\"粗心\"从复盘词汇里删掉，归因颗粒度升级到操作层" }
+                        ]
+                    },
+                    high: {
+                        label: "绿灯",
+                        emoji: "✅",
+                        range: "13-18分",
+                        situation: "你的心态和方向整体是健康的。申论在动笔、做题在复盘、每天能说出自己学会了什么。这个维度你目前OK。",
+                        reminder: "心态不是一劳永逸的——它会随着备考阶段变化而波动。基础期的淡定可能在瓶颈期被打破，拔高期的信心可能在冲刺期变成焦虑。心态维护不是修好一个bug就永远OK——更像是每天给电池充电。哪天突然\"学不进去了\"——直接翻到 §8 心态对应你那阶段的一节，有急救方案。5分钟速览 §8 行动清单即可。"
+                    }
+                }
+            }
+        ];
+
+        // 全局状态
+        let currentQuestion = 0;
+        let answers = new Array(QUESTIONS.length).fill(null);
+
+        // 维度信息（用于显示标题）
+        const GROUP_TITLES = [
+            "🧭 认知扫盲维度（3题）",
+            "⏱️ 时间战场维度（3题）",
+            "⚔️ 方法瓶颈维度（3题）",
+            "🧠 心态/方向维度（6题）"
+        ];
+
+        // 初始化
+        function init() {
+            renderCurrentQuestion();
+        }
+
+        // 渲染当前题目（单题渲染，性能最佳）
+        function renderCurrentQuestion() {
+            const q = QUESTIONS[currentQuestion];
+            const selectedIdx = answers[currentQuestion];
+
+            // 更新组标题
+            document.getElementById('groupTitle').textContent = GROUP_TITLES[q.group];
+
+            // 构建题目HTML
+            let optionsHtml = '';
+            for (let i = 0; i < q.options.length; i++) {
+                const opt = q.options[i];
+                const isSelected = selectedIdx === i;
+                optionsHtml += `
+                    <label class="option ${isSelected ? 'selected' : ''}" data-option="${i}">
+                        <input type="radio" name="q${currentQuestion}" value="${i}" ${isSelected ? 'checked' : ''}>
+                        <span class="option-marker">${opt.label}</span>
+                        <span class="option-text">${opt.text}</span>
+                    </label>
+                `;
+            }
+
+            document.getElementById('questionContainer').innerHTML = `
+                <div class="question-title">
+                    <span class="question-q">${q.q}</span>. ${q.title}
+                </div>
+                <div class="options">${optionsHtml}</div>
+            `;
+
+            // 绑定选项点击事件（事件委托，无需循环绑定）
+            document.querySelectorAll('#questionContainer .option').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const optIdx = parseInt(el.dataset.option);
+                    selectOption(optIdx);
+                });
+            });
+
+            // 更新进度条
+            const answeredCount = answers.filter(a => a !== null).length;
+            const progress = (answeredCount / QUESTIONS.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `第 ${currentQuestion + 1}/${QUESTIONS.length} 题`;
+
+            // 更新按钮状态
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            if (currentQuestion === QUESTIONS.length - 1) {
+                nextBtn.classList.add('hidden');
+                submitBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+            }
+        }
+
+        // 选择选项
+        function selectOption(optionIdx) {
+            answers[currentQuestion] = optionIdx;
+            // 仅更新选项样式，不重建 DOM
+            document.querySelectorAll('#questionContainer .option').forEach((el, i) => {
+                if (i === optionIdx) el.classList.add('selected');
+                else el.classList.remove('selected');
+            });
+            // 更新进度
+            const answeredCount = answers.filter(a => a !== null).length;
+            const progress = (answeredCount / QUESTIONS.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        // 上一题
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                renderCurrentQuestion();
+            }
+        }
+
+        // 下一题
+        function nextQuestion() {
+            if (currentQuestion < QUESTIONS.length - 1) {
+                currentQuestion++;
+                renderCurrentQuestion();
+            }
+        }
+
+        // 开始测试
+        function startTest() {
+            document.getElementById('startPage').classList.add('hidden');
+            document.getElementById('testPage').classList.remove('hidden');
+            renderCurrentQuestion();
+        }
+
+        // 提交测试
+        function submitTest() {
+            const unansweredIndices = [];
+            answers.forEach((answer, index) => {
+                if (answer === null) {
+                    unansweredIndices.push(index + 1); // 题目编号从1开始
+                }
+            });
+            
+            if (unansweredIndices.length > 0) {
+                const questionNumbers = unansweredIndices.join(', ');
+                alert(`还有 ${unansweredIndices.length} 道题未作答：第 ${questionNumbers} 题`);
+                
+                // 跳转到第一道未答题
+                const firstUnanswered = unansweredIndices[0] - 1;
+                currentQuestion = firstUnanswered;
+                renderCurrentQuestion();
+                
+                // 滚动到题目区域
+                document.getElementById('testPage').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+            }
+            
+            showResults();
+        }
+
+        // 显示结果
+        function showResults() {
+            document.getElementById('testPage').classList.add('hidden');
+            document.getElementById('resultPage').classList.remove('hidden');
+            
+            // 计算各维度得分
+            const dimensionScores = calculateDimensionScores();
+            
+            // 渲染雷达图
+            drawRadarChart(dimensionScores);
+            
+            // 渲染维度卡片
+            renderDimensionCards(dimensionScores);
+            
+            // 渲染详细分析
+            renderDetails(dimensionScores);
+            
+            // 渲染改进建议
+            renderSuggestions(dimensionScores);
+            
+            // 渲染答题回顾
+            renderAnswerReview();
+        }
+
+        // 计算各维度得分
+        function calculateDimensionScores() {
+            return DIMENSIONS.map(dim => {
+                const dimAnswers = dim.questions.map(qIdx => {
+                    const selectedIdx = answers[qIdx];
+                    return QUESTIONS[qIdx].options[selectedIdx].score;
+                });
+                // 直接用总分（不除以题数）
+                const total = dimAnswers.reduce((a, b) => a + b, 0);
+
+                // 根据你的判定标准
+                // 认知/时间/方法：3-4=红灯, 5-6=黄灯, 7-9=绿灯
+                // 心态：6-8=红灯, 9-12=黄灯, 13-18=绿灯
+                let level, status, diagnosisData;
+                if (dim.key === 'mindset') {
+                    if (total >= 13) {
+                        level = 'high'; status = 'green';
+                        diagnosisData = dim.diagnosis.high;
+                    } else if (total >= 9) {
+                        level = 'mid'; status = 'yellow';
+                        diagnosisData = dim.diagnosis.mid;
+                    } else {
+                        level = 'low'; status = 'red';
+                        diagnosisData = dim.diagnosis.low;
+                    }
+                } else {
+                    if (total >= 7) {
+                        level = 'high'; status = 'green';
+                        diagnosisData = dim.diagnosis.high;
+                    } else if (total >= 5) {
+                        level = 'mid'; status = 'yellow';
+                        diagnosisData = dim.diagnosis.mid;
+                    } else {
+                        level = 'low'; status = 'red';
+                        diagnosisData = dim.diagnosis.low;
+                    }
+                }
+
+                return {
+                    ...dim,
+                    score: total,
+                    maxScore: dim.key === 'mindset' ? 18 : 9,
+                    level,
+                    status,
+                    diagnosis: diagnosisData
+                };
+            });
+        }
+
+        // 绘制雷达图
+        function drawRadarChart(dimensions) {
+            const canvas = document.getElementById('radarChart');
+            const ctx = canvas.getContext('2d');
+            
+            const dpr = window.devicePixelRatio || 1;
+            const w = 460;
+            const h = 360;
+            canvas.width = w * dpr;
+            canvas.height = h * dpr;
+            canvas.style.width = w + 'px';
+            canvas.style.height = h + 'px';
+            ctx.scale(dpr, dpr);
+            
+            const cx = w / 2;
+            const cy = h / 2;
+            const maxRadius = 100;
+
+            ctx.clearRect(0, 0, w, h);
+
+            const labels = dimensions.map(d => d.name);
+            const normalizedValues = dimensions.map(d => d.score / d.maxScore);
+            const n = labels.length;
+            const angleStep = (Math.PI * 2) / n;
+            const startAngle = -Math.PI / 2;
+
+            // 绘制背景网格
+            ctx.strokeStyle = '#e8e8e8';
+            ctx.lineWidth = 1;
+            for (let level = 1; level <= 3; level++) {
+                const radius = (maxRadius * level) / 3;
+                ctx.beginPath();
+                for (let i = 0; i <= n; i++) {
+                    const angle = startAngle + i * angleStep;
+                    const x = cx + radius * Math.cos(angle);
+                    const y = cy + radius * Math.sin(angle);
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+            }
+
+            // 绘制轴线
+            ctx.strokeStyle = '#d0d0d0';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < n; i++) {
+                const angle = startAngle + i * angleStep;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(cx + maxRadius * Math.cos(angle), cy + maxRadius * Math.sin(angle));
+                ctx.stroke();
+            }
+
+            // 绘制数据区域
+            ctx.beginPath();
+            for (let i = 0; i < n; i++) {
+                const angle = startAngle + i * angleStep;
+                const valueRadius = normalizedValues[i] * maxRadius;
+                const x = cx + valueRadius * Math.cos(angle);
+                const y = cy + valueRadius * Math.sin(angle);
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(102, 126, 234, 0.25)';
+            ctx.fill();
+            ctx.strokeStyle = '#667eea';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // 绘制数据点
+            for (let i = 0; i < n; i++) {
+                const angle = startAngle + i * angleStep;
+                const valueRadius = normalizedValues[i] * maxRadius;
+                const x = cx + valueRadius * Math.cos(angle);
+                const y = cy + valueRadius * Math.sin(angle);
+                ctx.beginPath();
+                ctx.arc(x, y, 5, 0, Math.PI * 2);
+                ctx.fillStyle = '#667eea';
+                ctx.fill();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+
+            // 绘制标签 - 上下左右四个固定位置，避免重叠
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+            ctx.textBaseline = 'middle';
+            
+            // 标签与图表的距离
+            const labelOffset = 50;
+            
+            // 顶部标签 (12点钟方向)
+            const topX = cx;
+            const topY = cy - maxRadius - labelOffset;
+            ctx.textAlign = 'center';
+            ctx.fillText(labels[0], topX, topY);
+            
+            // 右侧标签 (3点钟方向)
+            const rightX = cx + maxRadius + labelOffset;
+            const rightY = cy;
+            ctx.textAlign = 'left';
+            ctx.fillText(labels[1], rightX, rightY);
+            
+            // 底部标签 (6点钟方向)
+            const bottomX = cx;
+            const bottomY = cy + maxRadius + labelOffset;
+            ctx.textAlign = 'center';
+            ctx.fillText(labels[2], bottomX, bottomY);
+            
+            // 左侧标签 (9点钟方向)
+            const leftX = cx - maxRadius - labelOffset;
+            const leftY = cy;
+            ctx.textAlign = 'right';
+            ctx.fillText(labels[3], leftX, leftY);
+        }
+
+        // 渲染维度卡片
+        function renderDimensionCards(dimensions) {
+            const container = document.getElementById('dimensionCards');
+            const colors = {
+                cognition: '#667eea',
+                time: '#52c41a',
+                method: '#fa8c16',
+                mindset: '#eb2f96'
+            };
+
+            container.innerHTML = dimensions.map(dim => `
+                <div class="dim-card">
+                    <div class="dim-card-header">
+                        <span class="dim-card-title">${dim.icon} ${dim.name}</span>
+                        <span class="dim-card-score">${dim.score} / ${dim.maxScore}</span>
+                    </div>
+                    <div class="dim-card-bar">
+                        <div class="dim-card-fill" style="width: ${(dim.score / dim.maxScore) * 100}%; background: ${colors[dim.key]}"></div>
+                    </div>
+                    <span class="dim-card-status status-${dim.status}">${dim.diagnosis.emoji} ${dim.diagnosis.label} | ${dim.diagnosis.range}</span>
+                </div>
+            `).join('');
+        }
+
+        // 渲染详细分析
+        function renderDetails(dimensions) {
+            const container = document.getElementById('detailContent');
+            const statusColors = {
+                red: '#cf1322',
+                yellow: '#d48806',
+                green: '#52c41a'
+            };
+
+            container.innerHTML = dimensions.map((dim, idx) => {
+                const d = dim.diagnosis;
+                const isLowOrMid = dim.level === 'low' || dim.level === 'mid';
+                
+                return `
+                <div class="detail-item" style="margin-bottom: 32px; padding-bottom: 32px; border-bottom: ${idx < dimensions.length - 1 ? '1px solid #f0f0f0' : 'none'};">
+                    <div class="detail-item-title" style="font-size: 18px; margin-bottom: 16px;">
+                        ${dim.icon} ${dim.name}维度（${dim.score}分） — <span style="color: ${statusColors[dim.status]};">${d.emoji} ${d.label} | ${d.range}</span>
+                    </div>
+                    
+                    ${isLowOrMid ? `
+                    <div class="diagnosis-section">
+                        <div class="diagnosis-label" style="color: ${statusColors[dim.status]};">📍 你的处境</div>
+                        <div class="diagnosis-content">${d.situation}</div>
+                    </div>
+                    
+                    <div class="diagnosis-section">
+                        <div class="diagnosis-label" style="color: #fa8c16;">⚠️ 正在发生的危险</div>
+                        <div class="diagnosis-content">${d.danger}</div>
+                    </div>
+                    
+                    <div class="diagnosis-section">
+                        <div class="diagnosis-label" style="color: #cf1322;">🚫 如果不解决</div>
+                        <div class="diagnosis-content">${d.consequence}</div>
+                    </div>
+                    
+                    <div class="diagnosis-section">
+                        <div class="diagnosis-label" style="color: #667eea;">🎯 建议优先学习的章节</div>
+                        <div class="diagnosis-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>章节</th>
+                                        <th>解决什么</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${d.suggestions.map(s => `
+                                    <tr>
+                                        <td class="chapter-cell">${s.chapter}</td>
+                                        <td>${s.desc}</td>
+                                    </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    ` : `
+                    <div class="diagnosis-section">
+                        <div class="diagnosis-label" style="color: ${statusColors[dim.status]};">✅ 你的状况</div>
+                        <div class="diagnosis-content">${d.situation}</div>
+                    </div>
+                    
+                    <div class="diagnosis-section">
+                        <div class="diagnosis-label" style="color: #667eea;">💡 提醒</div>
+                        <div class="diagnosis-content reminder">${d.reminder}</div>
+                    </div>
+                    `}
+                </div>
+                `;
+            }).join('');
+        }
+
+        // 渲染改进建议（详细版）
+        function renderSuggestions(dimensions) {
+            const container = document.getElementById('suggestionsContent');
+
+            // 按优先级排序：红灯(1) > 黄灯(2) > 绿灯(3)
+            const priorityMap = { low: 1, mid: 2, high: 3 };
+            const sorted = [...dimensions].sort((a, b) => priorityMap[a.level] - priorityMap[b.level]);
+
+            const redLights = sorted.filter(d => d.level === 'low');
+            const yellowLights = sorted.filter(d => d.level === 'mid');
+            const greenLights = sorted.filter(d => d.level === 'high');
+
+            const statusColors = { red: '#cf1322', yellow: '#d48806', green: '#52c41a' };
+            const statusBgColors = { red: 'rgba(207, 19, 34, 0.1)', yellow: 'rgba(212, 136, 6, 0.1)', green: 'rgba(82, 196, 26, 0.1)' };
+
+            let html = '';
+
+            // 优先级排序标题
+            html += `
+                <div class="priority-header">
+                    <div class="priority-header-title">📋 学习优先级排序</div>
+                    <div class="priority-header-subtitle">先解决主要薄弱项，再处理次要薄弱项，绿灯维度保持即可</div>
+                </div>
+            `;
+
+            // 红灯维度（主要薄弱项）- 显示详细建议
+            if (redLights.length > 0) {
+                html += `<div class="priority-section">`;
+                redLights.forEach(dim => {
+                    const d = dim.diagnosis;
+                    html += `
+                        <div class="chapter-card" style="border-left: 4px solid ${statusColors.red};">
+                            <div class="chapter-card-header">
+                                <span class="chapter-dim-name" style="color: ${statusColors.red};">${dim.icon} ${dim.name}</span>
+                                <span class="chapter-dim-badge" style="background: ${statusBgColors.red}; color: ${statusColors.red};">🚨 主要薄弱项</span>
+                            </div>
+                            <div class="chapter-list">
+                                ${d.suggestions.map(s => `
+                                    <div class="chapter-item">
+                                        <div class="chapter-name">${s.chapter}</div>
+                                        <div class="chapter-desc">${s.desc}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+
+            // 黄灯维度（次要薄弱项）- 显示详细建议
+            if (yellowLights.length > 0) {
+                html += `<div class="priority-section">`;
+                yellowLights.forEach(dim => {
+                    const d = dim.diagnosis;
+                    html += `
+                        <div class="chapter-card" style="border-left: 4px solid ${statusColors.yellow};">
+                            <div class="chapter-card-header">
+                                <span class="chapter-dim-name" style="color: ${statusColors.yellow};">${dim.icon} ${dim.name}</span>
+                                <span class="chapter-dim-badge" style="background: ${statusBgColors.yellow}; color: ${statusColors.yellow};">⚠️ 次要薄弱项</span>
+                            </div>
+                            <div class="chapter-list">
+                                ${d.suggestions.map(s => `
+                                    <div class="chapter-item">
+                                        <div class="chapter-name">${s.chapter}</div>
+                                        <div class="chapter-desc">${s.desc}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+
+            // 绿灯维度 - 只需保持
+            if (greenLights.length > 0) {
+                html += `
+                    <div class="green-section">
+                        <div class="green-title">✅ 绿灯维度（保持即可）</div>
+                        <div class="green-items">
+                            ${greenLights.map(d => `<span class="green-tag">${d.icon} ${d.name}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 评分规则卡片
+            html += `
+                <div class="rules-card">
+                    <div class="rules-title">📊 评分规则</div>
+                    <div class="rules-grid">
+                        <div class="rule-item">
+                            <div class="rule-dim">认知/时间/方法（满分9）</div>
+                            <div class="rule-scores">
+                                <span class="score-badge" style="background: rgba(207, 19, 34, 0.1); color: #cf1322;">3-4分 🚨</span>
+                                <span class="score-badge" style="background: rgba(212, 136, 6, 0.1); color: #d48806;">5-6分 ⚠️</span>
+                                <span class="score-badge" style="background: rgba(82, 196, 26, 0.1); color: #52c41a;">7-9分 ✅</span>
+                            </div>
+                        </div>
+                        <div class="rule-item">
+                            <div class="rule-dim">心态/方向（满分18）</div>
+                            <div class="rule-scores">
+                                <span class="score-badge" style="background: rgba(207, 19, 34, 0.1); color: #cf1322;">6-8分 🚨</span>
+                                <span class="score-badge" style="background: rgba(212, 136, 6, 0.1); color: #d48806;">9-12分 ⚠️</span>
+                                <span class="score-badge" style="background: rgba(82, 196, 26, 0.1); color: #52c41a;">13-18分 ✅</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            if (redLights.length === 0 && yellowLights.length === 0) {
+                html += `<div class="all-good">🎉 你的备考状态已经很不错！继续保持当前节奏，注重细节提升。</div>`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // 渲染答题回顾
+        function renderAnswerReview() {
+            const container = document.getElementById('answerReview');
+            
+            container.innerHTML = QUESTIONS.map((q, idx) => {
+                const selectedIdx = answers[idx];
+                const selectedOpt = q.options[selectedIdx];
+                return `
+                    <div class="review-question">
+                        <div class="review-question-title">${q.q}. ${q.title}</div>
+                        <div class="review-answer">你的答案：${selectedOpt.label}. ${selectedOpt.text}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 重新测试
+        function restartTest() {
+            answers = new Array(QUESTIONS.length).fill(null);
+            currentQuestion = 0;
+
+            document.getElementById('resultPage').classList.add('hidden');
+            document.getElementById('testPage').classList.remove('hidden');
+            renderCurrentQuestion();
+        }
+
+        // 页面加载完成后初始化
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>
